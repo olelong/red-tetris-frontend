@@ -1,3 +1,6 @@
+:root {
+}
+
 body {
   font-family: "SpaceGrotesk", Helvetica, Arial, sans-serif;
   margin: 0;
@@ -10,7 +13,7 @@ h1 {
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("/assets/fonts/SpaceGrotesk-SemiBold.ttf") format("truetype");
+  src: url("/fonts/SpaceGrotesk-SemiBold.ttf") format("truetype");
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;

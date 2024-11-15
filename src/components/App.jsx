@@ -1,16 +1,19 @@
-import { useSelector, useDispatch } from "react-redux";
-import { updateUsername, updateRoomName, reset, createRoom } from "../store/store";
+// import { useSelector, useDispatch } from "react-redux";
+// import { updateUsername, updateRoomName, reset, createRoom } from "../store/store";
 import "../styles/App.css";
+import Board from "./Board.jsx";
 
 export default function App() {
-  const room = useSelector((state) => state.string.room);
-  const username = useSelector((state) => state.string.username);
-  const dispatch = useDispatch();
+  // const room = useSelector((state) => state.string.room);
+  // const username = useSelector((state) => state.string.username);
+  // const dispatch = useDispatch();
 
   return (
     <div>
       <h1>Red Tetris</h1>
-      <h2>
+      <Board />
+
+      {/* <h2>
         Room : {room}, username: {username}
       </h2>
       <button
@@ -25,7 +28,7 @@ export default function App() {
 
       <button onClick={() => dispatch(reset())}>Reset</button>
 
-      <button onClick={() => dispatch(createRoom())}>create a room</button>
+      <button onClick={() => dispatch(createRoom())}>create a room</button> */}
     </div>
   );
 }

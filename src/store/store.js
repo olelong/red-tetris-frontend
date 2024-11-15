@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 // const initialState = {
 //   room: undefined,
@@ -14,7 +14,7 @@ import io from "socket.io-client";
 
 //CreateGame/Room, JoinRoom, launchGame, movePiece
 
-let socket;
+// let socket;
 
 const roomSlice = createSlice({
   name: "string",
@@ -47,7 +47,9 @@ const createRoomSlice = createSlice({
   },
   reducers: {
     createRoom: (state) => {
-      socket = io(state.room);
+      state.room;
+      // socket = io(state.room);
+      // console.log(socket);
     },
   },
 });

@@ -1,0 +1,21 @@
+.grid-container {
+  display: grid;
+  margin: auto;
+  grid-template-columns: repeat(10, 1fr);
+  max-width: 310px;
+  max-height: 615px;
+  border: 2px solid rgb(236, 227, 227);
+  gap: 2;
+}
+
+.grid-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 29px;
+  width: 29px;
+
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid #fff;
+}

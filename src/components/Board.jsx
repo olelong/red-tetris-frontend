@@ -1,4 +1,6 @@
-// import { useState } from "react";
+import { useState, useEffect } from "react";
+import { socket } from "../socket.js";
+
 import "../styles/Board.css";
 import kiwi from "../assets/kiwi.png";
 import redCat from "../assets/red-cat.png";
@@ -29,14 +31,24 @@ const imageMap = {
 };
 
 export default function Board() {
-  //   const [boardInfos, getBoardInfos] = useState([]);
-  const boardContent = Array.from({ length: 200 }, () =>
-    Math.floor(Math.random() * 8)
-  );
+  const [boardInfos, setBoardInfos] = useState([]);
+  useEffect(() => {
+    if (boardInfos.length <= 0) {
+      function updateGame(data) {
+        setBoardInfos(data?.board);
+        console.log("game update ", boardInfos, data);
+      }
+      socket.on("game:update", updateGame);
+
+      return () => {
+        socket.off("game:update", updateGame);
+      };
+    }
+  }, [boardInfos]);
 
   return (
     <div className="grid-container">
-      {boardContent.map((num, index) => (
+      {boardInfos.map((num, index) => (
         <div
           key={index}
           className="grid-item"

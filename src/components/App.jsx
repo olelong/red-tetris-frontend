@@ -1,33 +1,32 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
 import "../styles/App.css";
 import Board from "./Board.jsx";
 import { socket } from "../socket.js";
 
 export default function App() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
-
+  const [isConnected, setIsConnected] = useState(socket?.connected);
+  const { roomId, userId } = useParams();
+  // const { isSolo, setIsSolo } = useState(roomId && userId ? false : true);
+  
   useEffect(() => {
     function onConnect() {
+      console.log("in onConnect");
+      console.log(socket?.connected, isConnected, socket);
       setIsConnected(true);
     }
 
-    // function onDisconnect() {
-    //   setIsConnected(false);
-    // }
-
     socket.on("connect", onConnect);
-    console.log(socket?.connected, isConnected, socket);
-    // socket.on("disconnect", onDisconnect);
-
+    if (isConnected || socket.connected) {
+      socket.emit("room:create", { roomId, userId }, (response) => {
+        console.log("Res: ", response);
+      });
+    }
     return () => {
       socket.off("connect", onConnect);
-      // socket.off("disconnect", onDisconnect);
     };
-
-    //   socket.on("game:update", (data) => {
-    //     console.log("game update:", data);
-    //   });
-  }, []);
+  }, [isConnected]);
 
   return (
     <div>
@@ -44,8 +43,7 @@ export default function App() {
 // const username = useSelector((state) => state.string.username);
 // const dispatch = useDispatch();
 
-{
-  /* <h2>
+/* <h2>
         Room : {room}, username: {username}
       </h2>
       <button
@@ -61,4 +59,3 @@ export default function App() {
       <button onClick={() => dispatch(reset())}>Reset</button>
 
       <button onClick={() => dispatch(createRoom())}>create a room</button> */
-}

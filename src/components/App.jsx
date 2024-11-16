@@ -4,27 +4,44 @@ import { useParams } from "react-router-dom";
 import "../styles/App.css";
 import Board from "./Board.jsx";
 import { socket } from "../socket.js";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function App() {
-  const [isConnected, setIsConnected] = useState(socket?.connected);
+  const isConnected = useSelector((state) => state.connect.isConnected);
   const { roomId, userId } = useParams();
+  const dispatch = useDispatch();
   // const { isSolo, setIsSolo } = useState(roomId && userId ? false : true);
-  
-  useEffect(() => {
-    function onConnect() {
-      console.log("in onConnect");
-      console.log(socket?.connected, isConnected, socket);
-      setIsConnected(true);
-    }
 
-    socket.on("connect", onConnect);
+  useEffect(() => {
+    // function onConnect() {
+    //   console.log("in onConnect");
+    //   console.log(socket?.connected, isConnected, socket);
+    //   setIsConnected(true);
+    // }
+    dispatch({
+      type: "connect",
+      // params: () => {
+      //   console.log("in onConnect");
+      //   console.log(socket?.connected, isConnected, socket);
+      //   setIsConnected(true);
+      // },
+    });
+
+    // socket.on("connect", onConnect);
     if (isConnected || socket.connected) {
-      socket.emit("room:create", { roomId, userId }, (response) => {
-        console.log("Res: ", response);
+      dispatch({
+        type: "room:create",
+        payload: { roomId, userId },
       });
+      // socket.emit("room:create", { roomId, userId }, (response) => {
+      //   console.log("Res: ", response);
+      // });
     }
     return () => {
-      socket.off("connect", onConnect);
+      dispatch({
+        type: "disconnect",
+      });
+      // socket.off("connect", onConnect);
     };
   }, [isConnected]);
 

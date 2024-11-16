@@ -1,5 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-// import io from "socket.io-client";
+import { applyMiddleware } from "redux";
+import { socket } from "../socket.js";
+import { useDispatch } from "react-redux";
 
 // const initialState = {
 //   room: undefined,
@@ -14,50 +16,99 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 //CreateGame/Room, JoinRoom, launchGame, movePiece
 
-// let socket;
+// const roomSlice = createSlice({
+//   name: "string",
+//   initialState: {
+//     room: "undefined",
+//     username: "undefined",
+//     players: [],
+//     masterName: null,
+//   },
+//   reducers: {
+//     updateUsername: (state) => {
+//       state.username = "Pat";
+//     },
+//     updateRoomName: (state) => {
+//       state.room = "01";
+//     },
+//     reset: (state) => {
+//       state.room = undefined;
+//       state.username = undefined;
+//     },
+//   },
+// });
 
-const roomSlice = createSlice({
-  name: "string",
+// const createRoomSlice = createSlice({
+//   name: "createRoom",
+//   initialState: {
+//     room: undefined,
+//     username: undefined,
+//   },
+//   reducers: {
+//     createRoom: (state) => {
+//       state.room;
+//     },
+//   },
+// });
+
+// export const { updateUsername, updateRoomName, reset } = roomSlice.actions;
+// export const { createRoom } = createRoomSlice.actions;
+
+const connectionSlice = createSlice({
+  name: "connect",
   initialState: {
-    room: "undefined",
-    username: "undefined",
-    players: [],
-    masterName: null,
+    isConnected: false,
   },
   reducers: {
-    updateUsername: (state) => {
-      state.username = "Pat";
+    setConnected: (state) => {
+      state.isConnected = true;
     },
-    updateRoomName: (state) => {
-      state.room = "01";
-    },
-    reset: (state) => {
-      state.room = undefined;
-      state.username = undefined;
+    setDisconnected: (state) => {
+      state.isConnected = false;
     },
   },
 });
 
+export const { setConnected, setDisconnected } = connectionSlice.actions;
 
-const createRoomSlice = createSlice({
-  name: "room",
-  initialState: {
-    room: undefined,
-    username: undefined,
-  },
-  reducers: {
-    createRoom: (state) => {
-      state.room;
-      // socket = io(state.room);
-      // console.log(socket);
-    },
-  },
-});
+export const socketMiddleware = (socket) => (next) => (action) => {
+  switch (action.type) {
+    case "connect":
+      socket.on("connect", () => {
+        console.log("in onConnect");
+        useDispatch(setConnected());
+      });
+      break;
+    case "room:create":
+      if (socket.connected) {
+        socket.emit("room:create", action.payload, (response) => {
+          console.log("Res: ", response, action.payload);
+        });
+      }
+      break;
+    case "disconnect":
+      socket.off("connect", () => {
+        useDispatch(setDisconnected());
+      });
+      break;
+    default:
+      next(action);
+  }
+};
 
-export const { updateUsername, updateRoomName, reset } = roomSlice.actions;
-export const { createRoom } = createRoomSlice.actions;
+// useEffect(() => {
+//   socket.on("connect", params);
+//   return () => {
+//     socket.off("connect", params);
+//   };
+// }, []);
+
 const store = configureStore({
-  reducer: { string: roomSlice.reducer, room: createRoomSlice.reducer },
+  // reducer: { room: createRoomSlice.reducer },
+  reducer: { connect: connectionSlice.reducer },
+  applyMiddleware: socketMiddleware,
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware().concat(socketMiddleware(socket)),
 });
 
 export default store;

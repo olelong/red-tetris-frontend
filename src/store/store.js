@@ -31,12 +31,6 @@ const connectionSlice = createSlice({
 
 export const { setConnected, setDisconnected } = connectionSlice.actions;
 
-// function socketMiddleware(socket) {
-//   return function firstFn(next) {
-//     return function secondFn(action) {
-//     }
-//   }
-// }
 
 export const socketMiddleware = (socket) => {
   let isListeningToEvents = false;
@@ -74,3 +68,10 @@ const store = configureStore({
 });
 
 export default store;
+// Explications de WAEL:
+// function socketMiddleware(socket) {
+//   return function firstFn(next) {
+//     return function secondFn(action) {
+//     }
+//   }
+// }

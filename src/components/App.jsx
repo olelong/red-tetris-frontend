@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import "../styles/App.css";
 import Board from "./Board.jsx";
-import { socket } from "../socket.js";
+// import { socket } from "../socket.js";
+
+import "../styles/App.css";
+import bg from "../assets/background.png";
 
 export default function App() {
   const isConnected = useSelector((state) => state.connect.isConnected);
@@ -14,17 +16,15 @@ export default function App() {
   // const { isSolo, setIsSolo } = useState(roomId && userId ? false : true);
 
   useEffect(() => {
-    console.log('oh')
     dispatch({
       type: "connect",
     });
-    if (isConnected || socket.connected) {
+    if (isConnected) {
       dispatch({
         type: "room:create",
         payload: { roomId, userId },
       });
     }
-    console.log("isConnected", isConnected);
     return () => {
       dispatch({
         type: "disconnect",
@@ -33,8 +33,19 @@ export default function App() {
   }, [isConnected, dispatch, roomId, userId]);
 
   return (
-    <div>
-      <h1>Red Tetris</h1>
+    <div className="app-div">
+      <img
+        className="background"
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          height: "100vh",
+          width: "100vw",
+        }}
+      />
+      {/* <h1>Red Tetris</h1> */}
       <Board />
     </div>
   );

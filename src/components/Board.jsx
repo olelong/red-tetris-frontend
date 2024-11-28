@@ -11,6 +11,9 @@ import purpleCat from "../assets/catsTheme/purple-cat.png";
 import yellowCat from "../assets/catsTheme/yellow-cat.png";
 import penaltyCat from "../assets/catsTheme/penalty-cat.png";
 
+// import fairyGreen from "../assets/fairiesTheme/fairyGreen.png";
+
+
 // import kiwi from "../assets/fruitsTheme/kiwi.png";
 // import strawberry from "../assets/fruitsTheme/strawberry.png";
 

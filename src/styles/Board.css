@@ -1,16 +1,20 @@
 .board-container {
+  position: absolute;
+  top: -4.6%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 2;
   height: 100vh;
 }
 
 .grid-container {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  max-width: 310px;
-  max-height: 615px;
+  max-width: 100%;
+  aspect-ratio: 0.5;
   border: 2px solid rgb(236, 227, 227);
   gap: 2;
 }
@@ -19,8 +23,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 29px;
-  width: 29px;
+  height: 1.615vw;
+  width: 1.615vw;
 
   font-size: 14px;
   font-weight: bold;

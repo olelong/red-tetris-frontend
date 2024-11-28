@@ -34,17 +34,7 @@ export default function App() {
 
   return (
     <div className="app-div">
-      <img
-        className="background"
-        style={{
-          backgroundImage: `url(${bg})`,
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          height: "100vh",
-          width: "100vw",
-        }}
-      />
+      <img className="background" style={{ backgroundImage: `url(${bg})` }} />
       {/* <h1>Red Tetris</h1> */}
       <Board />
     </div>

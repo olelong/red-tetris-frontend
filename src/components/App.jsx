@@ -35,7 +35,7 @@ export default function App() {
   return (
     <div className="app-div">
       <img className="background" style={{ backgroundImage: `url(${bg})` }} />
-      {/* <h1>Red Tetris</h1> */}
+      <h1 className="username-actual">Username</h1>
       <Board />
     </div>
   );

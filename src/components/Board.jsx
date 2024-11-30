@@ -65,6 +65,10 @@ const fairiesThemeMap = {
   8: `url(${fairyPenalty})`, // Penalty grey
 };
 
+const theme = [catThemeMap, fruitsThemeMap, fairiesThemeMap][
+  Math.floor(Math.random() * 3)
+];
+
 export default function Board() {
   const [boardInfos, setBoardInfos] = useState([]);
   useEffect(() => {
@@ -89,9 +93,10 @@ export default function Board() {
             key={index}
             className="grid-item"
             style={{
-              backgroundColor: num === 8 ? "#cdd7e0" : "#ffffff",
-              backgroundImage: fruitsThemeMap[num], //catThemeMap[num],
+              backgroundColor: num === 8 ? "#cdd7e0" : "",
+              backgroundImage: theme[num],
               backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
             }}
           />
         ))}
@@ -99,15 +104,3 @@ export default function Board() {
     </div>
   );
 }
-
-// const colorMap = {
-//   0: "#ffffff", // Empty
-//   1: "#7CC6FE", // Cyan
-//   2: "#0081A7", // Blue
-//   3: "#FFAA5A", // Orange
-//   4: "#FFD25A", // Yellow
-//   5: "#BDF7B7", // Green
-//   6: "#C6C8EE", // Purple
-//   7: "#FF5154", // Red
-//   8: "#B5BEC6", // Penalty grey
-// };

@@ -1,15 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Board from "./Board.jsx";
-// import { socket } from "../socket.js";
+import { socket } from "../socket.js";
 
 import "../styles/App.css";
 import bg from "../assets/background.png";
 
 export default function App() {
-  const isConnected = useSelector((state) => state.connect.isConnected);
+  const gameInfos = useSelector((state) => state.game);
   // const board = useSelector((state) => state.game.board);
   const { roomId, userId } = useParams();
   const dispatch = useDispatch();
@@ -19,18 +19,16 @@ export default function App() {
     dispatch({
       type: "connect",
     });
-    if (isConnected) {
+    if (socket.connected) {
       dispatch({
         type: "room:create",
         payload: { roomId, userId },
       });
     }
-    return () => {
-      dispatch({
-        type: "disconnect",
-      });
-    };
-  }, [isConnected, dispatch, roomId, userId]);
+    // console.log("gameInfos: ", gameInfos);
+
+    return () => {};
+  }, [dispatch, roomId, userId]);
 
   return (
     <div className="app-div">

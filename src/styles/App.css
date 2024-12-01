@@ -24,6 +24,7 @@
 }
 
 .username-actual{
-  z-index: 3;
+  position: relative;
+  z-index: 2;
 }
  

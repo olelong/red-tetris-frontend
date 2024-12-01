@@ -29,41 +29,41 @@ import fruitMyrtille from "../assets/fruitsTheme/myrtille.png";
 import fruitOrange from "../assets/fruitsTheme/orange.png";
 import fruitPenalty from "../assets/fruitsTheme/durian.png";
 
-const fruitsThemeMap = {
-  0: "none", // Empty
-  1: `url(${fruitBaies})`, // Cyan
-  2: `url(${fruitMyrtille})`, // Blue
-  3: `url(${fruitOrange})`, // Orange
-  4: `url(${fruitLemon})`, // Yellow
-  5: `url(${fruitKiwi})`, // Green
-  6: `url(${fruitFigue})`, // Purple
-  7: `url(${fruitStrawberry})`, // Red
-  8: `url(${fruitPenalty})`, // Penalty grey
-};
+const fruitsThemeMap = [
+  "none", // Empty
+  `url(${fruitBaies})`, // Cyan
+  `url(${fruitMyrtille})`, // Blue
+  `url(${fruitOrange})`, // Orange
+  `url(${fruitLemon})`, // Yellow
+  `url(${fruitKiwi})`, // Green
+  `url(${fruitFigue})`, // Purple
+  `url(${fruitStrawberry})`, // Red
+  `url(${fruitPenalty})`, // Penalty grey
+];
 
-const catThemeMap = {
-  0: "none", // Empty
-  1: `url(${catLightBlue})`, // Cyan
-  2: `url(${catBlue})`, // Blue
-  3: `url(${catOrange})`, // Orange
-  4: `url(${catYellow})`, // Yellow
-  5: `url(${catGreen})`, // Green
-  6: `url(${catPurple})`, // Purple
-  7: `url(${catRed})`, // Red
-  8: `url(${catPenalty})`, // Penalty grey
-};
+const catThemeMap = [
+  "none", // Empty
+  `url(${catLightBlue})`, // Cyan
+  `url(${catBlue})`, // Blue
+  `url(${catOrange})`, // Orange
+  `url(${catYellow})`, // Yellow
+  `url(${catGreen})`, // Green
+  `url(${catPurple})`, // Purple
+  `url(${catRed})`, // Red
+  `url(${catPenalty})`, // Penalty grey
+];
 
-const fairiesThemeMap = {
-  0: "none", // Empty
-  1: `url(${fairyCyan})`, // Cyan
-  2: `url(${fairyBlue})`, // Blue
-  3: `url(${fairyOrange})`, // Orange
-  4: `url(${fairyYellow})`, // Yellow
-  5: `url(${fairyGreen})`, // Green
-  6: `url(${fairyPurple})`, // Purple
-  7: `url(${fairyRed})`, // Red
-  8: `url(${fairyPenalty})`, // Penalty grey
-};
+const fairiesThemeMap = [
+  "none", // Empty
+  `url(${fairyCyan})`, // Cyan
+  `url(${fairyBlue})`, // Blue
+  `url(${fairyOrange})`, // Orange
+  `url(${fairyYellow})`, // Yellow
+  `url(${fairyGreen})`, // Green
+  `url(${fairyPurple})`, // Purple
+  `url(${fairyRed})`, // Red
+  `url(${fairyPenalty})`, // Penalty grey
+];
 
 const theme = [catThemeMap, fruitsThemeMap, fairiesThemeMap][
   Math.floor(Math.random() * 3)

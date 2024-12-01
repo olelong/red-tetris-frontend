@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -25,18 +25,14 @@ export default function App() {
         payload: { roomId, userId },
       });
     }
-    // console.log("gameInfos: ", gameInfos);
+    console.log("gameInfos: ", gameInfos);
 
     return () => {};
-  }, [dispatch, roomId, userId]);
+  }, [dispatch, gameInfos, roomId, userId]);
 
   return (
     <div className="app-div">
-      <div
-        className="background"
-        title="A background in watercolor for a game tetris game"
-        style={{ backgroundImage: `url(${bg})` }}
-      />
+      <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       <h1 className="username-actual">Username</h1>
       <Board />
     </div>

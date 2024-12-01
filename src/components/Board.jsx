@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { socket } from "../socket.js";
+// import { useEffect } from "react";
+// import { socket } from "../socket.js";
+import { useSelector } from "react-redux";
 
 import "../styles/Board.css";
 import catRed from "../assets/catsTheme/red-cat.png";
@@ -70,25 +71,13 @@ const theme = [catThemeMap, fruitsThemeMap, fairiesThemeMap][
 ];
 
 export default function Board() {
-  const [boardInfos, setBoardInfos] = useState([]);
-  useEffect(() => {
-    if (boardInfos.length <= 0) {
-      function updateGame(data) {
-        setBoardInfos(data?.board);
-        console.log("game update ", boardInfos, data);
-      }
-      socket.on("game:update", updateGame);
-
-      return () => {
-        socket.off("game:update", updateGame);
-      };
-    }
-  }, [boardInfos]);
+  const boardInfos = useSelector((state) => state.game.board);
+  console.log("board: ", boardInfos);
 
   return (
     <div className="board-container">
       <div className="grid-container">
-        {boardInfos.map((num, index) => (
+        {boardInfos && boardInfos.map((num, index) => (
           <div
             key={index}
             className="grid-item"

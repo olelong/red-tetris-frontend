@@ -32,7 +32,11 @@ export default function App() {
 
   return (
     <div className="app-div">
-      <img className="background" alt="Background of tetris game, in watercolor" style={{ backgroundImage: `url(${bg})` }} />
+      <div
+        className="background"
+        title="A background in watercolor for a game tetris game"
+        style={{ backgroundImage: `url(${bg})` }}
+      />
       <h1 className="username-actual">Username</h1>
       <Board />
     </div>

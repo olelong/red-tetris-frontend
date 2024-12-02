@@ -10,6 +10,7 @@ import bg from "../assets/background.png";
 
 export default function App() {
   const gameInfos = useSelector((state) => state.game);
+  const isRoomCreated = useSelector((state) => state.isRoomCreated);
   // const board = useSelector((state) => state.game.board);
   const { roomId, userId } = useParams();
   const dispatch = useDispatch();
@@ -34,7 +35,8 @@ export default function App() {
     <div className="app-div">
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       <h1 className="username-actual">Username</h1>
-      <Board />
+
+      {isRoomCreated && <Board />}
     </div>
   );
 }

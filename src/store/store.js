@@ -19,19 +19,30 @@ const roomSlice = createSlice({
   name: "room",
   initialState: {
     // Send to the server:
+    isRoomCreated: false,
 
     // Receive from server:
     players: [""],
     master: "",
   },
   reducers: {
+    // Send to the server:
+    createRoom: (state, action) => {
+      state.isRoomCreated = action.payload;
+      console.log(
+        "create a room or a game: ",
+        state.isRoomCreated,
+        action.payload
+      );
+    },
+    // Receive from server:
     updateMaster: (state, action) => {
-      console.log("mater reducer");
-      state.master = action.payload?.master;
+      state.master = action.payload;
+      console.log("master reducer", state.master, action.payload);
     },
     updatePlayers: (state, action) => {
-      console.log("players reducer");
-      state.players = action.payload?.players;
+      state.players = action.payload;
+      console.log("players reducer", state.players, action.payload);
     },
   },
 });
@@ -47,19 +58,22 @@ const gameSlice = createSlice({
     winner: undefined,
   },
   reducers: {
+    // Receive from server:
     updateBoard: (state, action) => {
-      console.log("board reducer");
-      state.board = action.payload?.board;
+      state.board = action.payload;
+      console.log("board reducer", state.board, action.payload);
     },
     updateGameOver: (state, action) => {
-      console.log("gameOver reducer");
-      state.gameOver = action.payload?.gameOver;
+      state.gameOver = action.payload;
+      console.log("gameOver reducer", state.gameOver, action.payload);
     },
     updateSpectrums: (state, action) => {
-      state.spectrums = action.payload?.spectrums;
+      state.spectrums = action.payload;
+      console.log("update spectrums reducer", state.spectrums, action.payload);
     },
     updateWinner: (state, action) => {
-      state.winner = action.payload?.winner;
+      state.winner = action.payload;
+      console.log("update winner reducer", state.winner, action.payload);
     },
   },
 });
@@ -72,30 +86,25 @@ function connect() {
   console.log("Connected to the socket");
 }
 
-function onUpdateGame(board, gameOver) {
+function onUpdateGame({ board, gameOver }) {
   store.dispatch(gameSlice.actions.updateBoard(board));
   store.dispatch(gameSlice.actions.updateGameOver(gameOver));
-  console.log("Updating the game yeah", board, gameOver);
 }
 
-function onSpectrums(spectrums) {
+function onSpectrums({ spectrums }) {
   store.dispatch(gameSlice.actions.updateSpectrums(spectrums));
-  console.log("update Spectrums", spectrums);
 }
 
-function onEndGame(winner) {
+function onEndGame({ winner }) {
   store.dispatch(gameSlice.actions.updateWinner(winner));
-  console.log("winner is:", winner);
 }
 
-function onMaster(username) {
+function onMaster({ username }) {
   store.dispatch(roomSlice.actions.updateMaster(username));
-  console.log("Master is: ", username);
 }
 
-function onPlayers(players) {
+function onPlayers({ players }) {
   store.dispatch(roomSlice.actions.updatePlayers(players));
-  console.log("Players are: ", players);
 }
 
 export const socketMiddleware = (socket) => {
@@ -107,6 +116,7 @@ export const socketMiddleware = (socket) => {
   socket.off("game:end", onEndGame);
   socket.off("room:master", onMaster);
   socket.off("room:players", onPlayers);
+  socket.off("error", console.error);
 
   return (store) => (next) => (action) => {
     // HERE RECEIVE FROM SERVER
@@ -117,6 +127,7 @@ export const socketMiddleware = (socket) => {
       socket.on("game:end", onEndGame);
       socket.on("room:master", onMaster);
       socket.on("room:players", onPlayers);
+      socket.on("error", console.error);
 
       isListeningToEvents = true;
     }
@@ -125,7 +136,8 @@ export const socketMiddleware = (socket) => {
       case "room:create":
         if (socket.connected) {
           socket.emit("room:create", action.payload, (response) => {
-            console.log("Res: ", response, action.payload);
+            console.log("room:create emit: ", response, action.payload);
+            store.dispatch(roomSlice.actions.createRoom(response));
           });
         }
         break;
@@ -136,7 +148,7 @@ export const socketMiddleware = (socket) => {
 };
 
 const store = configureStore({
-  reducer: { game: gameSlice.reducer, room: roomSlice },
+  reducer: { game: gameSlice.reducer, room: roomSlice.reducer },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware(socket)),
 });

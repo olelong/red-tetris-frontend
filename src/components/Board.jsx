@@ -72,23 +72,24 @@ const theme = [catThemeMap, fruitsThemeMap, fairiesThemeMap][
 
 export default function Board() {
   const boardInfos = useSelector((state) => state.game.board);
-  console.log("board: ", boardInfos);
+  // console.log("board: ", boardInfos);
 
   return (
     <div className="board-container">
       <div className="grid-container">
-        {boardInfos && boardInfos.map((num, index) => (
-          <div
-            key={index}
-            className="grid-item"
-            style={{
-              backgroundColor: num === 8 ? "#cdd7e0" : "",
-              backgroundImage: theme[num],
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
-        ))}
+        {boardInfos &&
+          boardInfos.map((num, index) => (
+            <div
+              key={index}
+              className="grid-item"
+              style={{
+                backgroundColor: num === 8 ? "#cdd7e0" : "",
+                backgroundImage: theme[num],
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+          ))}
       </div>
     </div>
   );

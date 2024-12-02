@@ -19,7 +19,7 @@ const roomSlice = createSlice({
   name: "room",
   initialState: {
     // Send to the server:
-    isRoomCreated: false,
+    isRoomCreated: undefined,
 
     // Receive from server:
     players: [""],
@@ -38,11 +38,11 @@ const roomSlice = createSlice({
     // Receive from server:
     updateMaster: (state, action) => {
       state.master = action.payload;
-      console.log("master reducer", state.master, action.payload);
+      // console.log("master reducer", state.master, action.payload);
     },
     updatePlayers: (state, action) => {
       state.players = action.payload;
-      console.log("players reducer", state.players, action.payload);
+      // console.log("players reducer", state.players, action.payload);
     },
   },
 });
@@ -61,19 +61,19 @@ const gameSlice = createSlice({
     // Receive from server:
     updateBoard: (state, action) => {
       state.board = action.payload;
-      console.log("board reducer", state.board, action.payload);
+      // console.log("board reducer", state.board, action.payload);
     },
     updateGameOver: (state, action) => {
       state.gameOver = action.payload;
-      console.log("gameOver reducer", state.gameOver, action.payload);
+      // console.log("gameOver reducer", state.gameOver, action.payload);
     },
     updateSpectrums: (state, action) => {
       state.spectrums = action.payload;
-      console.log("update spectrums reducer", state.spectrums, action.payload);
+      // console.log("update spectrums reducer", state.spectrums, action.payload);
     },
     updateWinner: (state, action) => {
       state.winner = action.payload;
-      console.log("update winner reducer", state.winner, action.payload);
+      // console.log("update winner reducer", state.winner, action.payload);
     },
   },
 });
@@ -83,7 +83,7 @@ const gameSlice = createSlice({
 // next(setGameOver());
 
 function connect() {
-  console.log("Connected to the socket");
+  // console.log("Connected to the socket");
 }
 
 function onUpdateGame({ board, gameOver }) {
@@ -139,6 +139,14 @@ export const socketMiddleware = (socket) => {
             console.log("room:create emit: ", response, action.payload);
             store.dispatch(roomSlice.actions.createRoom(response));
           });
+        }
+        break;
+      case "room:join":
+        if (socket.connected) {
+          socket.emit("room:join", action.payload, (response) => {
+            console.log("room:join emit:", action.payload, response);
+
+          })
         }
         break;
       default:

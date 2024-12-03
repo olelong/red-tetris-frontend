@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@mui/material";
 
 import Board from "./Board.jsx";
 import { socket } from "../socket.js";
@@ -9,42 +10,111 @@ import "../styles/App.css";
 import bg from "../assets/background.png";
 
 export default function App() {
-  const gameInfos = useSelector((state) => state.game);
-  const isRoomCreated = useSelector((state) => state.room.isRoomCreated);
-  // const board = useSelector((state) => state.game.board);
   const { roomId, userId } = useParams();
+  const connected = useSelector((state) => state.game.connected);
   const dispatch = useDispatch();
-  const [isSolo, setIsSolo] = useState(true);
+  // const [isSolo, setIsSolo] = useState(true);
+
+  const isRoomCreated = useSelector((state) => state.room.isRoomCreated);
+  const joinedRoom = useSelector((state) => state.room.joinedRoom);
+  const isLaunched = useSelector((state) => state.game.launch);
+  const gameOver = useSelector((state) => state.game.gameOver);
+
+  const timeout = setTimeout(() => {
+    console.log(socket.connected);
+    clearTimeout(timeout);
+  }, 1000);
+
+  useEffect(() => console.log("connected:", connected), [connected]);
 
   useEffect(() => {
+    console.log("render!");
     dispatch({
       type: "connect",
     });
-    if (socket.connected) {
-      setIsSolo(!roomId && !userId ? true : false);
+    console.log("begin: ", isLaunched, connected);
+    if (connected && !isLaunched) {
+      const solo = !roomId && !userId;
+      // setIsSolo(solo);
       if (isRoomCreated === undefined) {
         dispatch({
           type: "room:create",
           payload: { roomId, userId },
         });
       }
-      if (!isSolo && !isRoomCreated) {
+      console.log(solo, isRoomCreated, joinedRoom);
+      if (!solo && isRoomCreated === false) {
         dispatch({
           type: "room:join",
           payload: { roomId, userId },
         });
       }
+      // if ((solo && isRoomCreated) || (!solo && joinedRoom)) {
+      //   dispatch({
+      //     type: "game:launch",
+      //   });
+      // }
     }
-    console.log("gameInfos: ", gameInfos);
 
     return () => {};
-  }, [dispatch, gameInfos, roomId, userId, isSolo, isRoomCreated]);
+  }, [
+    dispatch,
+    connected,
+    roomId,
+    userId,
+    joinedRoom,
+    isRoomCreated,
+    isLaunched,
+  ]);
+
+  useEffect(() => {
+    const manageEvents = (e) => {
+      const events = {
+        ArrowUp: "rotation",
+        ArrowRight: "right",
+        ArrowDown: "soft drop",
+        ArrowLeft: "left",
+        " ": "hard drop",
+      };
+
+      dispatch({
+        type: "game:move",
+        payload: { move: events[e.key] },
+      });
+    };
+
+    if (isLaunched && !gameOver)
+      document.addEventListener("keydown", manageEvents);
+
+    return () => document.removeEventListener("keydown", manageEvents);
+  }, [dispatch, gameOver, isLaunched]);
+
+  function launchGame() {
+    const solo = !roomId && !userId;
+
+    if ((solo && isRoomCreated) || (!solo && joinedRoom)) {
+      dispatch({
+        type: "game:launch",
+      });
+    }
+  }
 
   return (
     <div className="app-div">
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       <h1 className="username-actual">Username</h1>
-      <Board />
+      <Button
+        variant="contained"
+        onClick={() => {
+          launchGame();
+        }}
+        style={{
+          zIndex: "2",
+        }}
+      >
+        Launch
+      </Button>
+      {isLaunched && <Board />}
     </div>
   );
 }

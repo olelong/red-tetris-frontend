@@ -1,25 +1,12 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { socket } from "../socket";
 
-// const initialState = {
-//   room: undefined,
-//   username: undefined,
-//   move: "left" | "right" | "rotation" | "soft drop" | "hard drop",
-//   masterName: null,
-//   players: [],
-//   board: [],
-//   spectrums: [{ username: null, spectrum: [] }],
-//   winnerName: null,
-// };
-
-//CreateGame/Room, JoinRoom, launchGame, movePiece
-// GameSlice et un RoomSlice
-
 const roomSlice = createSlice({
   name: "room",
   initialState: {
     // Send to the server:
     isRoomCreated: undefined,
+    joinedRoom: { joined: false, reason: "" },
 
     // Receive from server:
     players: [""],
@@ -29,20 +16,17 @@ const roomSlice = createSlice({
     // Send to the server:
     createRoom: (state, action) => {
       state.isRoomCreated = action.payload;
-      console.log(
-        "create a room or a game: ",
-        state.isRoomCreated,
-        action.payload
-      );
     },
+    joinRoom: (state, action) => {
+      state.joinedRoom = action.payload;
+    },
+
     // Receive from server:
     updateMaster: (state, action) => {
       state.master = action.payload;
-      // console.log("master reducer", state.master, action.payload);
     },
     updatePlayers: (state, action) => {
       state.players = action.payload;
-      // console.log("players reducer", state.players, action.payload);
     },
   },
 });
@@ -51,39 +35,47 @@ const gameSlice = createSlice({
   name: "game",
   initialState: {
     // Send to the server:
+    launch: false,
+    move: "",
+
     // Receive from server:
+    connected: false,
     board: [],
     gameOver: false,
     spectrums: [{ username: "", spectrum: [] }],
     winner: undefined,
   },
   reducers: {
+    // Send to the server:
+    launchGame: (state, action) => {
+      state.launch = action.payload;
+    },
+    updateMove: (state, action) => {
+      state.possibleMoves = action.payload;
+    },
+
     // Receive from server:
+    updateConnection: (state, action) => {
+      state.connected = action.payload;
+    },
     updateBoard: (state, action) => {
       state.board = action.payload;
-      // console.log("board reducer", state.board, action.payload);
     },
     updateGameOver: (state, action) => {
       state.gameOver = action.payload;
-      // console.log("gameOver reducer", state.gameOver, action.payload);
     },
     updateSpectrums: (state, action) => {
       state.spectrums = action.payload;
-      // console.log("update spectrums reducer", state.spectrums, action.payload);
     },
     updateWinner: (state, action) => {
       state.winner = action.payload;
-      // console.log("update winner reducer", state.winner, action.payload);
     },
   },
 });
 
-// export const { updateBoard, updateGameOver, updateSpectrums, updateWinner } =
-//   gameSlice.actions;
-// next(setGameOver());
-
 function connect() {
-  // console.log("Connected to the socket");
+  console.log("Connected to the server");
+  store.dispatch(gameSlice.actions.updateConnection(true));
 }
 
 function onUpdateGame({ board, gameOver }) {
@@ -121,6 +113,8 @@ export const socketMiddleware = (socket) => {
   return (store) => (next) => (action) => {
     // HERE RECEIVE FROM SERVER
     if (!isListeningToEvents) {
+      isListeningToEvents = true;
+      if (socket.connected && !store.getState().game.connected) connect();
       socket.on("connect", connect);
       socket.on("game:update", onUpdateGame);
       socket.on("game:spectrums", onSpectrums);
@@ -128,29 +122,37 @@ export const socketMiddleware = (socket) => {
       socket.on("room:master", onMaster);
       socket.on("room:players", onPlayers);
       socket.on("error", console.error);
-
-      isListeningToEvents = true;
     }
     // BELOW SEND TO SERVER
-    switch (action.type) {
-      case "room:create":
-        if (socket.connected) {
+    if (socket.connected) {
+      switch (action.type) {
+        case "room:create":
           socket.emit("room:create", action.payload, (response) => {
             console.log("room:create emit: ", response, action.payload);
             store.dispatch(roomSlice.actions.createRoom(response));
           });
-        }
-        break;
-      case "room:join":
-        if (socket.connected) {
+          break;
+        case "room:join":
           socket.emit("room:join", action.payload, (response) => {
             console.log("room:join emit:", action.payload, response);
-
-          })
-        }
-        break;
-      default:
-        next(action);
+            store.dispatch(roomSlice.actions.joinRoom(response));
+          });
+          break;
+        case "game:launch":
+          socket.emit("game:launch", (response) => {
+            console.log("game:launch emit:", response);
+            store.dispatch(gameSlice.actions.launchGame(response));
+          });
+          break;
+        case "game:move":
+          socket.emit("game:move", action.payload, (response) => {
+            console.log("game:move emit:", action.payload, response);
+            store.dispatch(gameSlice.actions.updateMove(response));
+          });
+          break;
+        default:
+          next(action);
+      }
     }
   };
 };

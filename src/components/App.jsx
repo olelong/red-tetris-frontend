@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 
 import Board from "./Board.jsx";
-import { socket } from "../socket.js";
 
 import "../styles/App.css";
 import bg from "../assets/background.png";
@@ -19,13 +18,6 @@ export default function App() {
   const joinedRoom = useSelector((state) => state.room.joinedRoom);
   const isLaunched = useSelector((state) => state.game.launch);
   const gameOver = useSelector((state) => state.game.gameOver);
-
-  const timeout = setTimeout(() => {
-    console.log(socket.connected);
-    clearTimeout(timeout);
-  }, 1000);
-
-  useEffect(() => console.log("connected:", connected), [connected]);
 
   useEffect(() => {
     console.log("render!");
@@ -42,7 +34,7 @@ export default function App() {
           payload: { roomId, userId },
         });
       }
-      console.log(solo, isRoomCreated, joinedRoom);
+      // console.log(solo, isRoomCreated, joinedRoom);
       if (!solo && isRoomCreated === false) {
         dispatch({
           type: "room:join",
@@ -69,6 +61,7 @@ export default function App() {
 
   useEffect(() => {
     const manageEvents = (e) => {
+      e.preventDefault();
       const events = {
         ArrowUp: "rotation",
         ArrowRight: "right",
@@ -91,7 +84,6 @@ export default function App() {
 
   function launchGame() {
     const solo = !roomId && !userId;
-
     if ((solo && isRoomCreated) || (!solo && joinedRoom)) {
       dispatch({
         type: "game:launch",

@@ -23,8 +23,16 @@
   width: 100vw;
 }
 
-.username-actual{
+.username-actual {
   position: relative;
   z-index: 2;
+  color: var(--black);
 }
- 
+
+.launch-button {
+  z-index: 2;
+  margin: 0;
+  top: 50%;
+  background-color: var(--blue) !important;
+  transform: translateY(-50%);
+}

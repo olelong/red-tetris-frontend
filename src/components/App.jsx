@@ -8,6 +8,11 @@ import Board from "./Board.jsx";
 import "../styles/App.css";
 import bg from "../assets/background.png";
 
+// function checkId(id) {
+//   if (id.length > 1 && id.length <= 10) return true;
+//   else return false;
+// }
+
 export default function App() {
   const { roomId, userId } = useParams();
   const connected = useSelector((state) => state.game.connected);
@@ -18,6 +23,8 @@ export default function App() {
   const joinedRoom = useSelector((state) => state.room.joinedRoom);
   const isLaunched = useSelector((state) => state.game.launch);
   const gameOver = useSelector((state) => state.game.gameOver);
+
+  // if ((checkId(userId) && checkId(roomId)) || solo)
 
   useEffect(() => {
     console.log("render!");
@@ -41,11 +48,6 @@ export default function App() {
           payload: { roomId, userId },
         });
       }
-      // if ((solo && isRoomCreated) || (!solo && joinedRoom)) {
-      //   dispatch({
-      //     type: "game:launch",
-      //   });
-      // }
     }
 
     return () => {};
@@ -84,7 +86,7 @@ export default function App() {
 
   function launchGame() {
     const solo = !roomId && !userId;
-    if ((solo && isRoomCreated) || (!solo && joinedRoom)) {
+    if (solo || (!solo && joinedRoom)) {
       dispatch({
         type: "game:launch",
       });
@@ -94,15 +96,13 @@ export default function App() {
   return (
     <div className="app-div">
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
-      <h1 className="username-actual">Username</h1>
+      <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
       <Button
         variant="contained"
         onClick={() => {
           launchGame();
         }}
-        style={{
-          zIndex: "2",
-        }}
+        className="launch-button"
       >
         Launch
       </Button>

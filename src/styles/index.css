@@ -3,6 +3,11 @@ body {
   margin: 0;
 }
 
+:root {
+  --blue: #85add2;
+  --black: rgb(84, 71, 71);
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;

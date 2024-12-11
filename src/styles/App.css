@@ -8,6 +8,9 @@
   width: 100vw;
   overflow: hidden;
   position: relative;
+
+  background-size: cover;
+  background-repeat: repeat;
 }
 
 .background {

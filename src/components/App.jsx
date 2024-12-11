@@ -6,7 +6,8 @@ import { Button } from "@mui/material";
 import Board from "./Board.jsx";
 
 import "../styles/App.css";
-import bg from "../assets/background.png";
+import bg from "../assets/bg.png";
+import bgRepeat from "../assets/bg-repeat.png";
 
 // function checkId(id) {
 //   if (id.length > 1 && id.length <= 10) return true;
@@ -94,7 +95,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-div">
+    <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
       <Button

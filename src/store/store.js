@@ -23,6 +23,7 @@ const roomSlice = createSlice({
 
     // Receive from server:
     updateMaster: (state, action) => {
+      console.log("master is: ", action.payload);
       state.master = action.payload;
     },
     updatePlayers: (state, action) => {

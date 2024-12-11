@@ -18,14 +18,13 @@ export default function App() {
   const { roomId, userId } = useParams();
   const connected = useSelector((state) => state.game.connected);
   const dispatch = useDispatch();
-  // const [isSolo, setIsSolo] = useState(true);
 
   const isRoomCreated = useSelector((state) => state.room.isRoomCreated);
   const joinedRoom = useSelector((state) => state.room.joinedRoom);
   const isLaunched = useSelector((state) => state.game.launch);
   const gameOver = useSelector((state) => state.game.gameOver);
-
-  // if ((checkId(userId) && checkId(roomId)) || solo)
+  const isMaster =
+    useSelector((state) => state.room.master) === (userId || "[Solo]");
 
   useEffect(() => {
     console.log("render!");
@@ -35,7 +34,6 @@ export default function App() {
     console.log("begin: ", isLaunched, connected);
     if (connected && !isLaunched) {
       const solo = !roomId && !userId;
-      // setIsSolo(solo);
       if (isRoomCreated === undefined) {
         dispatch({
           type: "room:create",
@@ -98,15 +96,17 @@ export default function App() {
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
-      <Button
-        variant="contained"
-        onClick={() => {
-          launchGame();
-        }}
-        className="launch-button"
-      >
-        Launch
-      </Button>
+      {!isLaunched && isMaster && (
+        <Button
+          variant="contained"
+          onClick={() => {
+            launchGame();
+          }}
+          className="launch-button"
+        >
+          Launch
+        </Button>
+      )}
       {isLaunched && <Board />}
     </div>
   );

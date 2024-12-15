@@ -8,11 +8,7 @@ import Board from "./Board.jsx";
 import "../styles/App.css";
 import bg from "../assets/bg.png";
 import bgRepeat from "../assets/bg-repeat.png";
-
-// function checkId(id) {
-//   if (id.length > 1 && id.length <= 10) return true;
-//   else return false;
-// }
+import masterCrown from "../assets/master-crown.png";
 
 export default function App() {
   const { roomId, userId } = useParams();
@@ -23,31 +19,39 @@ export default function App() {
   const joinedRoom = useSelector((state) => state.room.joinedRoom);
   const isLaunched = useSelector((state) => state.game.launch);
   const gameOver = useSelector((state) => state.game.gameOver);
+  const winner = useSelector((state) => state.game.winner);
   const isMaster =
     useSelector((state) => state.room.master) === (userId || "[Solo]");
 
   useEffect(() => {
     console.log("render!");
-    dispatch({
-      type: "connect",
-    });
-    console.log("begin: ", isLaunched, connected);
+    if (!connected)
+      dispatch({
+        type: "connect",
+      });
     if (connected && !isLaunched) {
       const solo = !roomId && !userId;
       if (isRoomCreated === undefined) {
         dispatch({
           type: "room:create",
-          payload: { roomId, userId },
+          payload: { room: roomId, username: userId },
         });
       }
-      // console.log(solo, isRoomCreated, joinedRoom);
-      if (!solo && isRoomCreated === false) {
+
+      if (
+        !solo &&
+        isRoomCreated === false &&
+        !joinedRoom.joined &&
+        !joinedRoom.reason
+      ) {
         dispatch({
           type: "room:join",
-          payload: { roomId, userId },
+          payload: { room: roomId, username: userId },
         });
       }
     }
+
+    console.log("launched? ", isLaunched);
 
     return () => {};
   }, [
@@ -95,8 +99,20 @@ export default function App() {
   return (
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
-      <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
-      {!isLaunched && isMaster && (
+      <div className="username-master-div">
+        {isMaster && (
+          <img
+            alt="A crown to show who is the master of the game"
+            src={masterCrown}
+            style={{
+              heigth: "10px",
+            }}
+          />
+        )}
+        <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
+      </div>
+
+      {(!isLaunched || gameOver) && isMaster && (
         <Button
           variant="contained"
           onClick={() => {
@@ -104,10 +120,15 @@ export default function App() {
           }}
           className="launch-button"
         >
-          Launch
+          {gameOver ? "Restart" : "Start"}
         </Button>
       )}
-      {isLaunched && <Board />}
+      {isLaunched && !gameOver && <Board />}
+      {(winner || gameOver) && (
+        <h1 className="end-game-p">
+          {winner === userId ? "You Win! 🏆" : "Game Over 😭"}
+        </h1>
+      )}
     </div>
   );
 }

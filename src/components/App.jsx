@@ -22,6 +22,8 @@ export default function App() {
   const winner = useSelector((state) => state.game.winner);
   const isMaster =
     useSelector((state) => state.room.master) === (userId || "[Solo]");
+  const players = useSelector((state) => state.room.players);
+  console.log(players);
 
   useEffect(() => {
     console.log("render!");
@@ -51,8 +53,6 @@ export default function App() {
       }
     }
 
-    console.log("launched? ", isLaunched);
-
     return () => {};
   }, [
     dispatch,
@@ -81,11 +81,11 @@ export default function App() {
       });
     };
 
-    if (isLaunched && !gameOver)
+    if (!gameOver)
       document.addEventListener("keydown", manageEvents);
 
     return () => document.removeEventListener("keydown", manageEvents);
-  }, [dispatch, gameOver, isLaunched]);
+  }, [dispatch, gameOver]);
 
   function launchGame() {
     const solo = !roomId && !userId;
@@ -96,6 +96,7 @@ export default function App() {
     }
   }
 
+  console.log("game: ", winner, gameOver)
   return (
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
@@ -112,7 +113,7 @@ export default function App() {
         <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
       </div>
 
-      {(!isLaunched || gameOver) && isMaster && (
+      {gameOver !== false && (isMaster || players.length === 0) && (
         <Button
           variant="contained"
           onClick={() => {
@@ -123,8 +124,8 @@ export default function App() {
           {gameOver ? "Restart" : "Start"}
         </Button>
       )}
-      {isLaunched && !gameOver && <Board />}
-      {(winner || gameOver) && (
+      {!gameOver && <Board />}
+      {(gameOver || winner) && (
         <h1 className="end-game-p">
           {winner === userId ? "You Win! 🏆" : "Game Over 😭"}
         </h1>

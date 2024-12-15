@@ -42,7 +42,7 @@ const gameSlice = createSlice({
     // Receive from server:
     connected: false,
     board: [],
-    gameOver: false,
+    gameOver: undefined,
     spectrums: [{ username: "", spectrum: [] }],
     winner: undefined,
   },
@@ -50,6 +50,7 @@ const gameSlice = createSlice({
     // Send to the server:
     launchGame: (state, action) => {
       state.launch = action.payload;
+      state.winner = undefined;
     },
     updateMove: (state, action) => {
       state.possibleMoves = action.payload;
@@ -164,6 +165,7 @@ const store = configureStore({
     getDefaultMiddleware().concat(socketMiddleware(socket)),
 });
 
+// export const {launchGame} = gameSlice.actions;
 export default store;
 // Explications de WAEL:
 // function socketMiddleware(socket) {

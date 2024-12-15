@@ -26,6 +26,14 @@
   width: 100vw;
 }
 
+.error-joined-room {
+  position: relative;
+  top: 5vh;
+  font-size: 3vw;
+  z-index: 3;
+  color: rgb(202, 110, 110);
+}
+
 .username-master-div {
   position: relative;
   display: flex;
@@ -61,4 +69,32 @@
 
   color: var(--black);
   font-size: 5vw;
+}
+
+.spectrum-div-left {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2%;
+  justify-content: start;
+
+  z-index: 3;
+  top: 25vh;
+  left: 1vw;
+  width: 23vw;
+  height: 60vh;
+}
+
+.spectrum-div-right {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2%;
+  justify-content: start;
+
+  z-index: 3;
+  top: 25vh;
+  right: 0.5vw;
+  width: 23vw;
+  height: 60vh;
 }

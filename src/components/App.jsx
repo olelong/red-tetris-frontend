@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 
 import Board from "./Board.jsx";
+import Spectrum from "./Spectrum.jsx";
 
 import "../styles/App.css";
 import bg from "../assets/bg.png";
@@ -23,7 +24,7 @@ export default function App() {
   const isMaster =
     useSelector((state) => state.room.master) === (userId || "[Solo]");
   const players = useSelector((state) => state.room.players);
-  console.log(players);
+  const spectrums = useSelector((state) => state.game.spectrums);
 
   useEffect(() => {
     console.log("render!");
@@ -81,8 +82,7 @@ export default function App() {
       });
     };
 
-    if (!gameOver)
-      document.addEventListener("keydown", manageEvents);
+    if (!gameOver) document.addEventListener("keydown", manageEvents);
 
     return () => document.removeEventListener("keydown", manageEvents);
   }, [dispatch, gameOver]);
@@ -96,10 +96,11 @@ export default function App() {
     }
   }
 
-  console.log("game: ", winner, gameOver)
   return (
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
+
+      {/* Display username of current player */}
       <div className="username-master-div">
         {isMaster && (
           <img
@@ -113,6 +114,42 @@ export default function App() {
         <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
       </div>
 
+      {/* Manage errors when joining a room */}
+      {!joinedRoom.joined && userId && roomId && (
+        <h1 className="error-joined-room">
+          {joinedRoom.reason ? joinedRoom.reason + "🚫" : "Please refresh"}
+        </h1>
+      )}
+
+      <div className="spectrum-div-left">
+        {spectrums
+          .filter((_, i) => i < 6)
+          .map((player, index) => (
+            <Spectrum
+              userId={userId}
+              username={player.username}
+              spectrum={player.spectrum}
+              id={index}
+              key={index}
+            />
+          ))}
+      </div>
+
+      <div className="spectrum-div-right">
+        {spectrums
+          .filter((_, i) => i >= 6)
+          .map((player, index) => (
+            <Spectrum
+              userId={userId}
+              username={player.username}
+              spectrum={player.spectrum}
+              id={index + 6}
+              key={index}
+            />
+          ))}
+      </div>
+
+      {/* Launch, update and manage the Game */}
       {gameOver !== false && (isMaster || players.length === 0) && (
         <Button
           variant="contained"

@@ -1,0 +1,29 @@
+.spectrum-container {
+  position: relative;
+  display: grid;
+  z-index: 2;
+  grid-template-columns: repeat(10, 1fr);
+  align-items: end;
+
+  width: 31%;
+  height: 200px;
+
+  border: 1px solid white;
+  background-color: rgb(249, 234, 253);
+}
+
+.spectrum-bar {
+  z-index: 3;
+  width: 100%;
+}
+
+.username {
+  position: absolute;
+  z-index: 3;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  color: var(--black);
+  font-size: 1vw;
+}

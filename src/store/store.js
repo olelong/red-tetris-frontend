@@ -6,7 +6,7 @@ const roomSlice = createSlice({
   initialState: {
     // Send to the server:
     isRoomCreated: undefined,
-    joinedRoom: { joined: false, reason: "" },
+    joinedRoom: { joined: undefined, reason: "" },
 
     // Receive from server:
     players: [""],

@@ -10,9 +10,11 @@ import "./styles/index.css";
 
 const ValidateParams = ({ children, params }) => {
   const { roomId, userId } = params;
+  const isAlphanum = (value) => /^[a-zA-Z0-9]*$/.test(value);
   if (
-    (roomId && (roomId.length < 1 || roomId.length > 10)) ||
-    (userId && (userId.length < 1 || userId.length > 10))
+    (roomId &&
+      (!isAlphanum(roomId) || roomId.length < 1 || roomId.length > 10)) ||
+    (userId && (!isAlphanum(userId) || userId.length < 1 || userId.length > 10))
   )
     return <Error404Page />;
   return children;

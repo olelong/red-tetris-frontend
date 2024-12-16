@@ -17,24 +17,11 @@ import loseCloud from "../assets/lose-cloud.png";
 
 export default function App() {
   const { roomId, userId } = useParams();
-  const connected = useSelector((state) => state.game.connected);
-  const dispatch = useDispatch();
-
-  const isRoomCreated = useSelector((state) => state.room.isRoomCreated);
-  const joinedRoom = useSelector((state) => state.room.joinedRoom);
-  const isLaunched = useSelector((state) => state.game.launch);
-  const gameOver = useSelector((state) => state.game.gameOver);
-  const winner = useSelector((state) => state.game.winner);
   const isMaster =
     useSelector((state) => state.room.master) === (userId || "[Solo]");
-  const players = useSelector((state) => state.room.players);
-  const spectrums = useSelector((state) => state.game.spectrums);
-  const error = useSelector((state) => state.room.error);
-
-  console.log(
-    useSelector((state) => state.game),
-    useSelector((state) => state.room)
-  );
+  const gameState = useSelector((state) => state.game);
+  const roomState = useSelector((state) => state.room);
+  const dispatch = useDispatch();
 
   const reasonNotJoined = {
     "Room Not Found": "This room doesn't exist.",
@@ -45,13 +32,13 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!connected)
+    if (!gameState.connected)
       dispatch({
         type: "connect",
       });
-    if (connected && !isLaunched) {
+    if (gameState.connected && !gameState.launch) {
       const solo = !roomId && !userId;
-      if (isRoomCreated === undefined) {
+      if (roomState.isRoomCreated === undefined) {
         dispatch({
           type: "room:create",
           payload: { room: roomId, username: userId },
@@ -60,9 +47,9 @@ export default function App() {
 
       if (
         !solo &&
-        isRoomCreated === false &&
-        !joinedRoom.joined &&
-        !joinedRoom.reason
+        roomState.isRoomCreated === false &&
+        !roomState.joinedRoom.joined &&
+        !roomState.joinedRoom.reason
       ) {
         dispatch({
           type: "room:join",
@@ -74,12 +61,12 @@ export default function App() {
     return () => {};
   }, [
     dispatch,
-    connected,
+    gameState.connected,
     roomId,
     userId,
-    joinedRoom,
-    isRoomCreated,
-    isLaunched,
+    roomState.joinedRoom,
+    roomState.isRoomCreated,
+    gameState.launch,
   ]);
 
   useEffect(() => {
@@ -103,32 +90,41 @@ export default function App() {
       });
     };
 
-    if (!gameOver) document.addEventListener("keydown", manageEvents);
+    if (!gameState.gameOver) document.addEventListener("keydown", manageEvents);
     return () => document.removeEventListener("keydown", manageEvents);
-  }, [dispatch, gameOver]);
+  }, [dispatch, gameState.gameOver]);
 
   function launchGame() {
     const solo = !roomId && !userId;
 
-    if (solo || (!solo && joinedRoom) || players.length === 1) {
+    if (
+      solo ||
+      (!solo && roomState.joinedRoom) ||
+      roomState.players.length === 1
+    ) {
       dispatch({
         type: "game:launch",
       });
     }
   }
-  return error ? (
+  return roomState.error ? (
     <Error500Page />
   ) : (
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       {/* Manage errors when joining a room */}
-      {!joinedRoom.joined && !isRoomCreated && userId && roomId ? (
+      {!roomState.joinedRoom.joined &&
+      !roomState.isRoomCreated &&
+      userId &&
+      roomId ? (
         <div
           className="bg-error-joined"
           style={{ backgroundImage: `url(${bgError})` }}
         >
           <h1 className="error-joined-room">
-            {joinedRoom.reason ? reasonNotJoined[joinedRoom.reason] : ""}
+            {roomState.joinedRoom.reason
+              ? reasonNotJoined[roomState.joinedRoom.reason]
+              : ""}
           </h1>
         </div>
       ) : (
@@ -148,9 +144,9 @@ export default function App() {
           </div>
 
           {/* Diplaying spectrums of other players */}
-          {players.length > 1 && (
+          {roomState.players.length > 1 && (
             <div className="spectrum-div spectrum-div-left">
-              {spectrums
+              {gameState.spectrums
                 .filter((_, i) => i < 6)
                 .map((player, index) => (
                   <Spectrum
@@ -165,7 +161,7 @@ export default function App() {
           )}
 
           <div className="spectrum-div spectrum-div-right">
-            {spectrums
+            {gameState.spectrums
               .filter((_, i) => i >= 6)
               .map((player, index) => (
                 <Spectrum
@@ -179,8 +175,8 @@ export default function App() {
           </div>
 
           {/* Launch, update and manage the Game */}
-          {gameOver !== false &&
-            (isMaster || players.length === 1 ? (
+          {gameState.gameOver !== false &&
+            (isMaster || roomState.players.length === 1 ? (
               <Button
                 variant="contained"
                 onClick={() => {
@@ -195,24 +191,29 @@ export default function App() {
                 Waiting master to start
               </Button>
             ))}
-          {!gameOver && <Board />}
-          {(gameOver || winner) && userId && roomId && players.length > 1 && (
-            <div>
-              <h1
-                className={
-                  "end-game-p " +
-                  (winner === userId ? " end-game-win" : " end-game-lose")
-                }
-              >
-                {winner === userId ? "You Win!" : "Game Over"}
-              </h1>
-              <img
-                className="end-game-cloud"
-                src={winner === userId ? winCloud : loseCloud}
-                alt="Clouds for game over"
-              />
-            </div>
-          )}
+          {!gameState.gameOver && <Board />}
+          {(gameState.gameOver || gameState.winner) &&
+            userId &&
+            roomId &&
+            roomState.players.length > 1 && (
+              <div>
+                <h1
+                  className={
+                    "end-game-p " +
+                    (gameState.winner === userId
+                      ? " end-game-win"
+                      : " end-game-lose")
+                  }
+                >
+                  {gameState.winner === userId ? "You Win!" : "Game Over"}
+                </h1>
+                <img
+                  className="end-game-cloud"
+                  src={gameState.winner === userId ? winCloud : loseCloud}
+                  alt="Clouds for game over"
+                />
+              </div>
+            )}
         </div>
       )}
     </div>

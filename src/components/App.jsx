@@ -31,6 +31,11 @@ export default function App() {
   const spectrums = useSelector((state) => state.game.spectrums);
   const error = useSelector((state) => state.room.error);
 
+  console.log(
+    useSelector((state) => state.game),
+    useSelector((state) => state.room)
+  );
+
   const reasonNotJoined = {
     "Room Not Found": "This room doesn't exist.",
     "Already in a Room": "You're already in a room.",
@@ -40,7 +45,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    console.log("render!");
     if (!connected)
       dispatch({
         type: "connect",
@@ -89,6 +93,10 @@ export default function App() {
         " ": "hard drop",
       };
 
+      if (!events[e.key]) {
+        return;
+      }
+
       dispatch({
         type: "game:move",
         payload: { move: events[e.key] },
@@ -96,19 +104,18 @@ export default function App() {
     };
 
     if (!gameOver) document.addEventListener("keydown", manageEvents);
-
     return () => document.removeEventListener("keydown", manageEvents);
   }, [dispatch, gameOver]);
 
   function launchGame() {
     const solo = !roomId && !userId;
-    if (solo || (!solo && joinedRoom)) {
+
+    if (solo || (!solo && joinedRoom) || players.length === 1) {
       dispatch({
         type: "game:launch",
       });
     }
   }
-
   return error ? (
     <Error500Page />
   ) : (
@@ -173,7 +180,7 @@ export default function App() {
 
           {/* Launch, update and manage the Game */}
           {gameOver !== false &&
-            (isMaster || players.length === 0 ? (
+            (isMaster || players.length === 1 ? (
               <Button
                 variant="contained"
                 onClick={() => {
@@ -202,7 +209,7 @@ export default function App() {
               <img
                 className="end-game-cloud"
                 src={winner === userId ? winCloud : loseCloud}
-                alt=""
+                alt="Clouds for game over"
               />
             </div>
           )}

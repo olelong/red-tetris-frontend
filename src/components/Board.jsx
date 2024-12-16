@@ -1,5 +1,3 @@
-// import { useEffect } from "react";
-// import { socket } from "../socket.js";
 import { useSelector } from "react-redux";
 
 import "../styles/Board.css";
@@ -72,7 +70,6 @@ const theme = [catThemeMap, fruitsThemeMap, fairiesThemeMap][
 
 export default function Board() {
   const boardInfos = useSelector((state) => state.game.board);
-  // console.log("board: ", boardInfos);
 
   return (
     <div className="board-container">

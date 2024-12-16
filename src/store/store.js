@@ -24,14 +24,12 @@ const roomSlice = createSlice({
 
     // Receive from server:
     updateMaster: (state, action) => {
-      console.log("master is: ", action.payload);
       state.master = action.payload;
     },
     updatePlayers: (state, action) => {
       state.players = action.payload;
     },
     updateError: (state, action) => {
-      console.log("up: ", action.payload)
       state.error = action.payload;
     },
   },
@@ -82,7 +80,6 @@ const gameSlice = createSlice({
 });
 
 function connect() {
-  console.log("Connected to the server");
   store.dispatch(gameSlice.actions.updateConnection(true));
 }
 
@@ -141,25 +138,21 @@ export const socketMiddleware = (socket) => {
       switch (action.type) {
         case "room:create":
           socket.emit("room:create", action.payload, (response) => {
-            console.log("room:create emit: ", response, action.payload);
             store.dispatch(roomSlice.actions.createRoom(response));
           });
           break;
         case "room:join":
           socket.emit("room:join", action.payload, (response) => {
-            console.log("room:join emit:", action.payload, response);
             store.dispatch(roomSlice.actions.joinRoom(response));
           });
           break;
         case "game:launch":
           socket.emit("game:launch", (response) => {
-            console.log("game:launch emit:", response);
             store.dispatch(gameSlice.actions.launchGame(response));
           });
           break;
         case "game:move":
           socket.emit("game:move", action.payload, (response) => {
-            console.log("game:move emit:", action.payload, response);
             store.dispatch(gameSlice.actions.updateMove(response));
           });
           break;
@@ -176,12 +169,4 @@ const store = configureStore({
     getDefaultMiddleware().concat(socketMiddleware(socket)),
 });
 
-// export const {launchGame} = gameSlice.actions;
 export default store;
-// Explications de WAEL:
-// function socketMiddleware(socket) {
-//   return function firstFn(next) {
-//     return function secondFn(action) {
-//     }
-//   }
-// }

@@ -1,5 +1,4 @@
 #root {
-  /* margin: 0 auto; */
   text-align: center;
 }
 
@@ -159,10 +158,10 @@
 
 /* Demi laptop */
 @media (max-width: 942px) {
-  .bg-error-joined {
-    width: 40%;
-    height: 20%;
-  }
+.bg-error-joined {
+  width: 40%;
+  height: 20%;
+}
 
   .username-master-div {
     top: 22vw;
@@ -186,10 +185,6 @@
 }
 
 @media (max-width: 700px) {
-  /* .username-master-div {
-    top: 38vh;
-  } */
-
   .spectrum-div {
     gap: 2%;
     top: 42vh;

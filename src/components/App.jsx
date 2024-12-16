@@ -96,7 +96,6 @@ export default function App() {
 
   function launchGame() {
     const solo = !roomId && !userId;
-
     if (
       solo ||
       (!solo && roomState.joinedRoom) ||
@@ -107,6 +106,10 @@ export default function App() {
       });
     }
   }
+  useEffect(() => {
+    console.log("HERE", gameState.winner, gameState.gameOver, gameState.launch);
+  }, [gameState.gameOver, gameState.launch, gameState.winner]);
+
   return roomState.error ? (
     <Error500Page />
   ) : (
@@ -147,6 +150,7 @@ export default function App() {
           {roomState.players.length > 1 && (
             <div className="spectrum-div spectrum-div-left">
               {gameState.spectrums
+                .filter(({ username }) => username !== userId)
                 .filter((_, i) => i < 6)
                 .map((player, index) => (
                   <Spectrum
@@ -162,6 +166,7 @@ export default function App() {
 
           <div className="spectrum-div spectrum-div-right">
             {gameState.spectrums
+              .filter(({ username }) => username !== userId)
               .filter((_, i) => i >= 6)
               .map((player, index) => (
                 <Spectrum
@@ -175,7 +180,7 @@ export default function App() {
           </div>
 
           {/* Launch, update and manage the Game */}
-          {gameState.gameOver !== false &&
+          {(gameState.gameOver !== false || gameState.winner) &&
             (isMaster || roomState.players.length === 1 ? (
               <Button
                 variant="contained"
@@ -191,7 +196,7 @@ export default function App() {
                 Waiting master to start
               </Button>
             ))}
-          {!gameState.gameOver && <Board />}
+          {!gameState.gameOver && gameState.winner === undefined && <Board />}
           {(gameState.gameOver || gameState.winner) &&
             userId &&
             roomId &&

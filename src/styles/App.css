@@ -158,13 +158,9 @@
 
 /* Demi laptop */
 @media (max-width: 942px) {
-.bg-error-joined {
-  width: 40%;
-  height: 20%;
-}
-
-  .username-master-div {
-    top: 22vw;
+  .bg-error-joined {
+    width: 40%;
+    height: 20%;
   }
 
   .spectrum-div {

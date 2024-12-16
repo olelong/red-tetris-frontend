@@ -69,6 +69,7 @@ const gameSlice = createSlice({
     },
     updateGameOver: (state, action) => {
       state.gameOver = action.payload;
+      if (!action.payload) state.winner = undefined;
     },
     updateSpectrums: (state, action) => {
       state.spectrums = action.payload;

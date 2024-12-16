@@ -180,7 +180,8 @@ export default function App() {
           </div>
 
           {/* Launch, update and manage the Game */}
-          {(gameState.gameOver !== false || gameState.winner) &&
+          {(gameState.gameOver === undefined ||
+            (gameState.gameOver === true && gameState.winner !== undefined)) &&
             (isMaster || roomState.players.length === 1 ? (
               <Button
                 variant="contained"

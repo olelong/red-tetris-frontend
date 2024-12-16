@@ -5,8 +5,8 @@
   grid-template-columns: repeat(10, 1fr);
   align-items: end;
 
-  width: 31%;
-  height: 200px;
+  width: 30%;
+  height: 50%;
 
   border: 1px solid white;
   background-color: rgb(249, 234, 253);
@@ -19,11 +19,28 @@
 
 .username {
   position: absolute;
-  z-index: 3;
-  top: -30px;
+  z-index: 4;
   left: 50%;
   transform: translateX(-50%);
+  width: 100%;
 
   color: var(--black);
-  font-size: 1vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.3vw;
+}
+
+/* Demi laptop */
+@media (max-width: 942px) {
+  .spectrum-container {
+    width: 30%;
+    height: 40%;
+  }
+}
+
+@media (max-width: 700px) {
+  .spectrum-container {
+    width: 28%;
+    height: 40%;
+  }
 }

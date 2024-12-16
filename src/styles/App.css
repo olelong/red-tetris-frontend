@@ -26,12 +26,32 @@
   width: 100vw;
 }
 
+.bg-error-joined {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+
+  width: 400px;
+  height: 200px;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  border-radius: 20px;
+  border: 3px solid var(--blue);
+}
+
 .error-joined-room {
   position: relative;
-  top: 5vh;
-  font-size: 3vw;
-  z-index: 3;
-  color: rgb(202, 110, 110);
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  font-size: 2vw;
+  color: var(--black);
 }
 
 .username-master-div {
@@ -52,6 +72,27 @@
   font-size: 3vw;
 }
 
+.spectrum-div {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2%;
+  justify-content: start;
+
+  z-index: 3;
+  top: 25vh;
+  width: 23vw;
+  height: 60vh;
+}
+
+.spectrum-div-left {
+  left: 1vw;
+}
+
+.spectrum-div-right {
+  right: 0.5vw;
+}
+
 .launch-button {
   z-index: 2;
   margin: 0;
@@ -60,41 +101,107 @@
   transform: translateY(-50%);
 }
 
+.waiting-button {
+  z-index: 2;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+  font-size: 1vw !important;
+  cursor: default;
+}
+
+.waiting-button:hover {
+  background-color: none !important;
+  cursor: default;
+}
+
 .end-game-p {
-  position: relative;
-  z-index: 3;
+  position: absolute;
+  z-index: 2;
   justify-content: center;
-  top: 25vh;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
   height: 5vw;
-
-  color: var(--black);
-  font-size: 5vw;
+  font-size: 3.5vw;
 }
 
-.spectrum-div-left {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2%;
-  justify-content: start;
-
-  z-index: 3;
-  top: 25vh;
-  left: 1vw;
-  width: 23vw;
-  height: 60vh;
+.end-game-win {
+  background-clip: text;
+  background: -webkit-linear-gradient(white, var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--dark-blue);
 }
 
-.spectrum-div-right {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2%;
-  justify-content: start;
+.end-game-lose {
+  color: var(--gradient-rose);
+  background-clip: text;
+  background: -webkit-linear-gradient(var(--rose), var(--gradient-rose));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--gradient-rose);
+}
 
-  z-index: 3;
-  top: 25vh;
-  right: 0.5vw;
-  width: 23vw;
-  height: 60vh;
+.end-game-cloud {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(50% - 220px);
+  width: 50%;
+}
+
+/* Demi laptop */
+@media (max-width: 942px) {
+  .username-master-div {
+    top: 22vw;
+  }
+
+  .spectrum-div {
+    gap: 1.5%;
+    top: 35vh;
+    width: 20vw;
+    height: 40vh;
+  }
+
+  .spectrum-div-right {
+    right: 0;
+  }
+
+  .end-game-cloud {
+    top: calc(50% - 130px);
+    width: 40%;
+  }
+}
+
+@media (max-width: 700px) {
+  /* .username-master-div {
+    top: 38vh;
+  } */
+
+  .spectrum-div {
+    gap: 2%;
+    top: 42vh;
+    width: 15vw;
+    height: 30vw;
+  }
+
+  .spectrum-div-left {
+    left: 3vw;
+  }
+
+  .spectrum-div-right {
+    right: 3vw;
+  }
+
+  .end-game-cloud {
+    top: calc(50% - 100px);
+    width: 30%;
+  }
 }

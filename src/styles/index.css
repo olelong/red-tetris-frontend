@@ -4,7 +4,14 @@ body {
 }
 
 :root {
-  --blue: #85add2;
+  --light-blue: #d5eefb;
+  --blue: #adc8e1;
+  --dark-blue: #6aa9e3;
+  --light-rose: #f9dde2;
+  --rose: #ebadab;
+  /* --yellow: #f9e8ad; */
+  /* --gradient-rose: #c8514d; */
+  --gradient-rose: #c60a04;
   --black: rgb(84, 71, 71);
 }
 

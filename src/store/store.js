@@ -11,6 +11,7 @@ const roomSlice = createSlice({
     // Receive from server:
     players: [""],
     master: "",
+    error: undefined,
   },
   reducers: {
     // Send to the server:
@@ -28,6 +29,10 @@ const roomSlice = createSlice({
     },
     updatePlayers: (state, action) => {
       state.players = action.payload;
+    },
+    updateError: (state, action) => {
+      console.log("up: ", action.payload)
+      state.error = action.payload;
     },
   },
 });
@@ -51,6 +56,7 @@ const gameSlice = createSlice({
     launchGame: (state, action) => {
       state.launch = action.payload;
       state.winner = undefined;
+      state.gameOver = undefined;
     },
     updateMove: (state, action) => {
       state.possibleMoves = action.payload;
@@ -101,6 +107,11 @@ function onPlayers({ players }) {
   store.dispatch(roomSlice.actions.updatePlayers(players));
 }
 
+function onError({ errorMsg }) {
+  store.dispatch(roomSlice.actions.updateError(errorMsg));
+  console.error();
+}
+
 export const socketMiddleware = (socket) => {
   let isListeningToEvents = false;
   // socket.off
@@ -110,7 +121,7 @@ export const socketMiddleware = (socket) => {
   socket.off("game:end", onEndGame);
   socket.off("room:master", onMaster);
   socket.off("room:players", onPlayers);
-  socket.off("error", console.error);
+  socket.off("error", onError);
 
   return (store) => (next) => (action) => {
     // HERE RECEIVE FROM SERVER
@@ -123,7 +134,7 @@ export const socketMiddleware = (socket) => {
       socket.on("game:end", onEndGame);
       socket.on("room:master", onMaster);
       socket.on("room:players", onPlayers);
-      socket.on("error", console.error);
+      socket.on("error", onError);
     }
     // BELOW SEND TO SERVER
     if (socket.connected) {

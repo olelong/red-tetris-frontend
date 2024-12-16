@@ -5,11 +5,15 @@ import { Button } from "@mui/material";
 
 import Board from "./Board.jsx";
 import Spectrum from "./Spectrum.jsx";
+import Error500Page from "./Error500Page.jsx";
 
 import "../styles/App.css";
 import bg from "../assets/bg.png";
 import bgRepeat from "../assets/bg-repeat.png";
+import bgError from "../assets/bg-error.png";
 import masterCrown from "../assets/master-crown.png";
+import winCloud from "../assets/win-cloud.png";
+import loseCloud from "../assets/lose-cloud.png";
 
 export default function App() {
   const { roomId, userId } = useParams();
@@ -25,6 +29,15 @@ export default function App() {
     useSelector((state) => state.room.master) === (userId || "[Solo]");
   const players = useSelector((state) => state.room.players);
   const spectrums = useSelector((state) => state.game.spectrums);
+  const error = useSelector((state) => state.room.error);
+
+  const reasonNotJoined = {
+    "Room Not Found": "This room doesn't exist.",
+    "Already in a Room": "You're already in a room.",
+    "Username Taken": "This username is already taken.",
+    "In Game": "The game has already started.",
+    "Room Full": "The room is full. Try another one.",
+  };
 
   useEffect(() => {
     console.log("render!");
@@ -96,76 +109,104 @@ export default function App() {
     }
   }
 
-  return (
+  return error ? (
+    <Error500Page />
+  ) : (
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
-
-      {/* Display username of current player */}
-      <div className="username-master-div">
-        {isMaster && (
-          <img
-            alt="A crown to show who is the master of the game"
-            src={masterCrown}
-            style={{
-              heigth: "10px",
-            }}
-          />
-        )}
-        <h1 className="username-actual">{userId ? userId : "Solo"}</h1>
-      </div>
-
       {/* Manage errors when joining a room */}
-      {!joinedRoom.joined && userId && roomId && (
-        <h1 className="error-joined-room">
-          {joinedRoom.reason ? joinedRoom.reason + "🚫" : "Please refresh"}
-        </h1>
-      )}
-
-      <div className="spectrum-div-left">
-        {spectrums
-          .filter((_, i) => i < 6)
-          .map((player, index) => (
-            <Spectrum
-              userId={userId}
-              username={player.username}
-              spectrum={player.spectrum}
-              id={index}
-              key={index}
-            />
-          ))}
-      </div>
-
-      <div className="spectrum-div-right">
-        {spectrums
-          .filter((_, i) => i >= 6)
-          .map((player, index) => (
-            <Spectrum
-              userId={userId}
-              username={player.username}
-              spectrum={player.spectrum}
-              id={index + 6}
-              key={index}
-            />
-          ))}
-      </div>
-
-      {/* Launch, update and manage the Game */}
-      {gameOver !== false && (isMaster || players.length === 0) && (
-        <Button
-          variant="contained"
-          onClick={() => {
-            launchGame();
-          }}
-          className="launch-button"
+      {!joinedRoom.joined && !isRoomCreated && userId && roomId ? (
+        <div
+          className="bg-error-joined"
+          style={{ backgroundImage: `url(${bgError})` }}
         >
-          {gameOver ? "Restart" : "Start"}
-        </Button>
-      )}
-      {!gameOver && <Board />}
-      {(gameOver || winner) && (
-        <h1 className="end-game-p">
-          {winner === userId ? "You Win! 🏆" : "Game Over 😭"}
-        </h1>
+          <h1 className="error-joined-room">
+            {joinedRoom.reason ? reasonNotJoined[joinedRoom.reason] : ""}
+          </h1>
+        </div>
+      ) : (
+        <div className="app-div">
+          {/* Display username of current player */}
+          <div className="username-master-div">
+            {isMaster && userId && (
+              <img
+                alt="A crown to show who is the master of the game"
+                src={masterCrown}
+                style={{
+                  heigth: "10px",
+                }}
+              />
+            )}
+            <h1 className="username-actual">{userId ? userId : ""}</h1>
+          </div>
+
+          {/* Diplaying spectrums of other players */}
+          {players.length > 1 && (
+            <div className="spectrum-div spectrum-div-left">
+              {spectrums
+                .filter((_, i) => i < 6)
+                .map((player, index) => (
+                  <Spectrum
+                    userId={userId}
+                    username={player.username}
+                    spectrum={player.spectrum}
+                    id={index}
+                    key={index}
+                  />
+                ))}
+            </div>
+          )}
+
+          <div className="spectrum-div spectrum-div-right">
+            {spectrums
+              .filter((_, i) => i >= 6)
+              .map((player, index) => (
+                <Spectrum
+                  userId={userId}
+                  username={player.username}
+                  spectrum={player.spectrum}
+                  id={index + 6}
+                  key={index}
+                />
+              ))}
+          </div>
+
+          {/* Launch, update and manage the Game */}
+          {gameOver !== false &&
+            (isMaster || players.length === 0 ? (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  launchGame();
+                }}
+                className="launch-button"
+              >
+                Start
+              </Button>
+            ) : (
+              <Button variant="outlined" className="waiting-button" disabled>
+                Waiting master to start
+              </Button>
+            ))}
+          {!gameOver && <Board />}
+          {(gameOver || winner) && userId && roomId && players.length > 1 && (
+            <div>
+              <h1
+                className={
+                  "end-game-p " +
+                  (winner === userId ? " end-game-win" : " end-game-lose")
+                }
+              >
+                {winner === userId ? "You Win!" : "Game Over"}
+              </h1>
+              <img
+                className="end-game-cloud"
+                src={winner === userId ? winCloud : loseCloud}
+                alt=""
+              />
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

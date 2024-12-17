@@ -34,14 +34,6 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/solo"
-          element={
-            <Provider store={store}>
-              <App />
-            </Provider>
-          }
-        />
-        <Route
           path=":roomId/:userId"
           errorElement={<Error404Page />}
           element={

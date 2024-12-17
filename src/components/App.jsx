@@ -23,6 +23,15 @@ export default function App() {
   const roomState = useSelector((state) => state.room);
   const dispatch = useDispatch();
 
+  const gameStarted = gameState.gameOver === undefined;
+  const gameEnded = gameState.winner !== undefined;
+  const isSoloGameEnded =
+    roomState.players.length >= 1 &&
+    gameState.winner === undefined &&
+    gameState.gameOver === true;
+  const isWinner = gameState.winner === userId;
+  const isSolo = (!userId && !roomId) || roomState.players === 1;
+
   const reasonNotJoined = {
     "Room Not Found": "This room doesn't exist.",
     "Already in a Room": "You're already in a room.",
@@ -107,8 +116,13 @@ export default function App() {
     }
   }
   useEffect(() => {
-    console.log("HERE", gameState.winner, gameState.gameOver, gameState.launch);
-  }, [gameState.gameOver, gameState.launch, gameState.winner]);
+    console.log(
+      "HERE",
+      roomState.players.length,
+      gameState.gameOver,
+      gameState.winner
+    );
+  }, [gameState.gameOver, gameState.winner, roomState.players.length]);
 
   return roomState.error ? (
     <Error500Page />
@@ -116,10 +130,7 @@ export default function App() {
     <div className="app-div" style={{ backgroundImage: `url(${bgRepeat})` }}>
       <div className="background" style={{ backgroundImage: `url(${bg})` }} />
       {/* Manage errors when joining a room */}
-      {!roomState.joinedRoom.joined &&
-      !roomState.isRoomCreated &&
-      userId &&
-      roomId ? (
+      {!roomState.joinedRoom.joined && !roomState.isRoomCreated && !isSolo ? (
         <div
           className="bg-error-joined"
           style={{ backgroundImage: `url(${bgError})` }}
@@ -134,7 +145,7 @@ export default function App() {
         <div className="app-div">
           {/* Display username of current player */}
           <div className="username-master-div">
-            {isMaster && userId && (
+            {isMaster && !isSolo && (
               <img
                 alt="A crown to show who is the master of the game"
                 src={masterCrown}
@@ -145,9 +156,8 @@ export default function App() {
             )}
             <h1 className="username-actual">{userId ? userId : ""}</h1>
           </div>
-
           {/* Diplaying spectrums of other players */}
-          {roomState.players.length > 1 && (
+          {!isSolo && (
             <div className="spectrum-div spectrum-div-left">
               {gameState.spectrums
                 .filter(({ username }) => username !== userId)
@@ -163,7 +173,6 @@ export default function App() {
                 ))}
             </div>
           )}
-
           <div className="spectrum-div spectrum-div-right">
             {gameState.spectrums
               .filter(({ username }) => username !== userId)
@@ -178,12 +187,9 @@ export default function App() {
                 />
               ))}
           </div>
-
           {/* Launch, update and manage the Game */}
-          {(gameState.gameOver === undefined ||
-            // (gameState.gameOver === true &&
-            gameState.winner !== undefined) &&
-            (isMaster || roomState.players.length === 1 ? (
+          {(gameStarted || gameEnded || isSoloGameEnded) &&
+            (isMaster || isSolo ? (
               <Button
                 variant="contained"
                 onClick={() => {
@@ -198,25 +204,21 @@ export default function App() {
                 Waiting master to start
               </Button>
             ))}
-          {!gameState.gameOver && gameState.winner === undefined && <Board />}
-          {(gameState.gameOver || gameState.winner) &&
-            userId &&
-            roomId &&
-            roomState.players.length > 1 && (
+          {!gameState.gameOver && !gameEnded && <Board />}
+          {(gameState.gameOver || gameEnded) &&
+            !isSolo  && (
               <div>
                 <h1
                   className={
                     "end-game-p " +
-                    (gameState.winner === userId
-                      ? " end-game-win"
-                      : " end-game-lose")
+                    (isWinner ? " end-game-win" : " end-game-lose")
                   }
                 >
-                  {gameState.winner === userId ? "You Win!" : "Game Over"}
+                  {isWinner ? "You Win!" : "Game Over"}
                 </h1>
                 <img
                   className="end-game-cloud"
-                  src={gameState.winner === userId ? winCloud : loseCloud}
+                  src={isWinner ? winCloud : loseCloud}
                   alt="Clouds for game over"
                 />
               </div>

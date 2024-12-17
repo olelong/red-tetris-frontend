@@ -80,6 +80,14 @@ const gameSlice = createSlice({
   },
 });
 
+const updateSpectrumLocally = (players) => {
+  const spectrums = players.map((username) => ({
+    username,
+    spectrum: [],
+  }));
+  store.dispatch(gameSlice.actions.updateSpectrums(spectrums));
+};
+
 function connect() {
   store.dispatch(gameSlice.actions.updateConnection(true));
 }
@@ -103,6 +111,7 @@ function onMaster({ username }) {
 
 function onPlayers({ players }) {
   store.dispatch(roomSlice.actions.updatePlayers(players));
+  updateSpectrumLocally(players);
 }
 
 function onError({ errorMsg }) {

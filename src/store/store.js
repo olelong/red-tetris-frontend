@@ -111,6 +111,7 @@ function onMaster({ username }) {
 
 function onPlayers({ players }) {
   store.dispatch(roomSlice.actions.updatePlayers(players));
+  store.dispatch(gameSlice.actions.updateWinner('#'));
   updateSpectrumLocally(players);
 }
 

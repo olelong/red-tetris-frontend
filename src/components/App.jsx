@@ -26,9 +26,8 @@ export default function App() {
   const gameStarted = gameState.gameOver === undefined;
   const gameEnded = gameState.winner !== undefined;
   const isSoloGameEnded =
-    roomState.players.length >= 1 &&
-    gameState.winner === undefined &&
-    gameState.gameOver === true;
+    roomState.players.length === 1 && gameState.gameOver === true;
+
   const isWinner = gameState.winner === userId;
   const isSolo = (!userId && !roomId) || roomState.players === 1;
 
@@ -205,8 +204,8 @@ export default function App() {
               </Button>
             ))}
           {!gameState.gameOver && !gameEnded && <Board />}
-          {(gameState.gameOver || gameEnded) &&
-            !isSolo  && (
+          {(gameState.gameOver || (gameEnded && gameState.winner !== "#")) &&
+            !isSolo && (
               <div>
                 <h1
                   className={

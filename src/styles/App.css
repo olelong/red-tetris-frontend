@@ -101,13 +101,13 @@
 }
 
 .waiting-button {
-  z-index: 2;
+  z-index: 3;
   margin: 0;
   top: 50%;
   transform: translateY(-50%);
 
-  color: var(--blue) !important;
-  border-color: var(--blue) !important;
+  color: white !important;
+  border-color: white !important;
   font-size: 1vw !important;
   cursor: default;
 }
@@ -161,6 +161,11 @@
   .bg-error-joined {
     width: 40%;
     height: 20%;
+  }
+
+  .waiting-button {
+    color: var(--blue) !important;
+    border-color: var(--blue) !important;
   }
 
   .spectrum-div {

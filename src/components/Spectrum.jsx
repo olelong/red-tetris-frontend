@@ -1,3 +1,4 @@
+import * as React from 'react';
 import "../styles/Spectrums.css";
 
 const colors = [

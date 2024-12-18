@@ -1,3 +1,4 @@
+import * as React from 'react';
 import bg from "../assets/bg-404.png";
 import bgRepeat from "../assets/bg-404-repeat.png";
 import "../styles/App.css";

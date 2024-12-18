@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -115,14 +115,6 @@ export default function App() {
       });
     }
   }
-  useEffect(() => {
-    console.log(
-      "HERE",
-      roomState.players.length,
-      gameState.gameOver,
-      gameState.winner
-    );
-  }, [gameState.gameOver, gameState.winner, roomState.players.length]);
 
   return roomState.error ? (
     <Error500Page />
@@ -144,7 +136,7 @@ export default function App() {
       ) : (
         <div className="app-div">
           {/* Display username of current player */}
-          <div className="username-master-div">
+          <div className="username-master-div" data-testid="master-div">
             {isMaster && !isSolo && (
               <img
                 alt="A crown to show who is the master of the game"

@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useParams,
+} from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 
@@ -8,8 +13,8 @@ import Error404Page from "./components/Error404Page.jsx";
 import store from "./store/store.js";
 import "./styles/index.css";
 
-const ValidateParams = ({ children, params }) => {
-  const { roomId, userId } = params;
+const ValidateParams = ({ children }) => {
+  const { roomId, userId } = useParams();
   const isAlphanum = (value) => /^[a-zA-Z0-9]*$/.test(value);
   if (
     (roomId &&
@@ -34,16 +39,11 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path=":roomId/:userId"
+          path="/:roomId/:userId"
           errorElement={<Error404Page />}
           element={
             <Provider store={store}>
-              <ValidateParams
-                params={{
-                  roomId: window.location.pathname.split("/")[1],
-                  userId: window.location.pathname.split("/")[2],
-                }}
-              >
+              <ValidateParams>
                 <App />
               </ValidateParams>
             </Provider>

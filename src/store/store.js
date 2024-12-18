@@ -80,62 +80,61 @@ const gameSlice = createSlice({
   },
 });
 
-const updateSpectrumLocally = (players) => {
-  const spectrums = players.map((username) => ({
-    username,
-    spectrum: [],
-  }));
-  store.dispatch(gameSlice.actions.updateSpectrums(spectrums));
-};
-
-function connect() {
-  store.dispatch(gameSlice.actions.updateConnection(true));
-}
-
-function onUpdateGame({ board, gameOver }) {
-  store.dispatch(gameSlice.actions.updateBoard(board));
-  store.dispatch(gameSlice.actions.updateGameOver(gameOver));
-}
-
-function onSpectrums({ spectrums }) {
-  store.dispatch(gameSlice.actions.updateSpectrums(spectrums));
-}
-
-function onEndGame({ winner }) {
-  store.dispatch(gameSlice.actions.updateWinner(winner));
-}
-
-function onMaster({ username }) {
-  store.dispatch(roomSlice.actions.updateMaster(username));
-}
-
-function onPlayers({ players }) {
-  store.dispatch(roomSlice.actions.updatePlayers(players));
-  store.dispatch(gameSlice.actions.updateWinner('#'));
-  updateSpectrumLocally(players);
-}
-
-function onError({ errorMsg }) {
-  store.dispatch(roomSlice.actions.updateError(errorMsg));
-  console.error();
-}
-
-export const socketMiddleware = (socket) => {
+const createSocketMiddleware = () => {
   let isListeningToEvents = false;
-  // socket.off
-  socket.off("connect", connect);
-  socket.off("game:update", onUpdateGame);
-  socket.off("game:spectrums", onSpectrums);
-  socket.off("game:end", onEndGame);
-  socket.off("room:master", onMaster);
-  socket.off("room:players", onPlayers);
-  socket.off("error", onError);
-
-  return (store) => (next) => (action) => {
+  return (socket) => (store) => (next) => (action) => {
     // HERE RECEIVE FROM SERVER
     if (!isListeningToEvents) {
       isListeningToEvents = true;
+      const updateSpectrumLocally = (players) => {
+        const spectrums = players.map((username) => ({
+          username,
+          spectrum: [],
+        }));
+        store.dispatch(gameSlice.actions.updateSpectrums(spectrums));
+      };
+  
+      function connect() {
+        store.dispatch(gameSlice.actions.updateConnection(true));
+      }
+  
+      function onUpdateGame({ board, gameOver }) {
+        store.dispatch(gameSlice.actions.updateBoard(board));
+        store.dispatch(gameSlice.actions.updateGameOver(gameOver));
+      }
+  
+      function onSpectrums({ spectrums }) {
+        store.dispatch(gameSlice.actions.updateSpectrums(spectrums));
+      }
+  
+      function onEndGame({ winner }) {
+        store.dispatch(gameSlice.actions.updateWinner(winner));
+      }
+  
+      function onMaster({ username }) {
+        store.dispatch(roomSlice.actions.updateMaster(username));
+      }
+  
+      function onPlayers({ players }) {
+        store.dispatch(roomSlice.actions.updatePlayers(players));
+        store.dispatch(gameSlice.actions.updateWinner("#"));
+        updateSpectrumLocally(players);
+      }
+  
+      function onError({ errorMsg }) {
+        store.dispatch(roomSlice.actions.updateError(errorMsg));
+        console.error(errorMsg);
+      }
+
       if (socket.connected && !store.getState().game.connected) connect();
+      // socket.off
+      // socket.off("connect", connect);
+      // socket.off("game:update", onUpdateGame);
+      // socket.off("game:spectrums", onSpectrums);
+      // socket.off("game:end", onEndGame);
+      // socket.off("room:master", onMaster);
+      // socket.off("room:players", onPlayers);
+      // socket.off("error", onError);
       socket.on("connect", connect);
       socket.on("game:update", onUpdateGame);
       socket.on("game:spectrums", onSpectrums);
@@ -174,10 +173,14 @@ export const socketMiddleware = (socket) => {
   };
 };
 
-const store = configureStore({
-  reducer: { game: gameSlice.reducer, room: roomSlice.reducer },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware(socket)),
-});
+export const createStore = () => {
+  const socketMiddleware = createSocketMiddleware();
+  return configureStore({
+    reducer: { game: gameSlice.reducer, room: roomSlice.reducer },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(socketMiddleware(socket)),
+  });
+};
+const store = createStore();
 
 export default store;

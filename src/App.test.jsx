@@ -111,7 +111,6 @@ it("should be the master", (done) => {
 it("should display 500", (done) => {
   myRouter(["/"]);
   socket.on("error", async (data) => {
-    console.log(data);
     await screen.findByText(/500/i);
     done();
   });
@@ -139,16 +138,19 @@ it("should display game board", (done) => {
         checkDone();
       }
     );
-    socket.emit("game:launch", async (response) => {
-      expect(response).toBe(true);
-      let movesCompleted = 0;
-      const onMoveComplete = () => {
-        movesCompleted++;
-        if (movesCompleted === 10) checkDone();
-      };
 
-      for (let i = 0; i < 10; i++)
-        socket.emit("game:move", { move: "hard drop" }, onMoveComplete);
+    screen.findByText(/Wael/i).then(() => {
+      socket.emit("game:launch", async (response) => {
+        expect(response).toBe(true);
+        let movesCompleted = 0;
+        const onMoveComplete = () => {
+          movesCompleted++;
+          if (movesCompleted === 10) checkDone();
+        };
+
+        for (let i = 0; i < 10; i++)
+          socket.emit("game:move", { move: "hard drop" }, onMoveComplete);
+      });
     });
   });
 });

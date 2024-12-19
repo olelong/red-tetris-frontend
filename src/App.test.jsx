@@ -117,3 +117,39 @@ it("should display 500", (done) => {
   });
   socket.emit("room:create", { room: "6" });
 });
+
+it("should display game board", (done) => {
+  const socket2 = io("ws://localhost:3000");
+
+  let doneNb = 0;
+  const checkDone = () => {
+    if (doneNb === 1) done();
+    else doneNb++;
+  };
+
+  myRouter(["/7/oriane"]);
+  screen.findByText(/START/i).then(() => {
+    socket2.emit(
+      "room:join",
+      { room: "7", username: "Wael" },
+      async (response) => {
+        expect(response.joined).toBe(true);
+        await screen.findByText(/Wael/i);
+        socket2.close();
+        checkDone();
+      }
+    );
+    socket.emit("game:launch", async (response) => {
+      expect(response).toBe(true);
+      let movesCompleted = 0;
+      const onMoveComplete = () => {
+        console.log("in move", movesCompleted);
+        movesCompleted++;
+        if (movesCompleted === 10) checkDone();
+      };
+
+      for (let i = 0; i < 10; i++)
+        socket.emit("game:move", { move: "hard drop" }, onMoveComplete);
+    });
+  });
+});

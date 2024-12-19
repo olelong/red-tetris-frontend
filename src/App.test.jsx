@@ -1,5 +1,5 @@
 import * as React from "react";
-import { render, screen, waitFor, within, act } from "../test-utils";
+import { render, screen, within, act } from "../test-utils";
 import { io } from "socket.io-client";
 
 import { socket } from "./socket";
@@ -110,7 +110,7 @@ it("should be the master", (done) => {
 
 it("should display 500", (done) => {
   myRouter(["/"]);
-  socket.on("error", async (data) => {
+  socket.on("error", async () => {
     await screen.findByText(/500/i);
     done();
   });
@@ -119,10 +119,10 @@ it("should display 500", (done) => {
 
 it("should display game board", (done) => {
   const socket2 = io("ws://localhost:3000");
-
   let doneNb = 0;
+
   const checkDone = () => {
-    if (doneNb === 1) done();
+    if (doneNb === 2) done();
     else doneNb++;
   };
 
@@ -137,11 +137,13 @@ it("should display game board", (done) => {
         checkDone();
       }
     );
-
     screen.findByText(/Wael/i).then(() => {
       socket.emit("game:launch", async (response) => {
         expect(response).toBe(true);
-        socket2.emit("game:move", { move: "hard drop" }, socket2.close());
+        socket2.emit("game:move", { move: "hard drop" }, () => {
+          socket2.close();
+          checkDone();
+        });
         let movesCompleted = 0;
         const onMoveComplete = () => {
           movesCompleted++;

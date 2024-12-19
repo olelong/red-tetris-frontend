@@ -143,7 +143,6 @@ it("should display game board", (done) => {
       expect(response).toBe(true);
       let movesCompleted = 0;
       const onMoveComplete = () => {
-        console.log("in move", movesCompleted);
         movesCompleted++;
         if (movesCompleted === 10) checkDone();
       };

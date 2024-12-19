@@ -134,7 +134,6 @@ it("should display game board", (done) => {
       async (response) => {
         expect(response.joined).toBe(true);
         await screen.findByText(/Wael/i);
-        socket2.close();
         checkDone();
       }
     );
@@ -142,12 +141,12 @@ it("should display game board", (done) => {
     screen.findByText(/Wael/i).then(() => {
       socket.emit("game:launch", async (response) => {
         expect(response).toBe(true);
+        socket2.emit("game:move", { move: "hard drop" }, socket2.close());
         let movesCompleted = 0;
         const onMoveComplete = () => {
           movesCompleted++;
           if (movesCompleted === 10) checkDone();
         };
-
         for (let i = 0; i < 10; i++)
           socket.emit("game:move", { move: "hard drop" }, onMoveComplete);
       });

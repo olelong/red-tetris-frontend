@@ -29,9 +29,9 @@ it("should display start button", () => {
   expect(screen.getByText(/START/i)).toBeInTheDocument();
 });
 
-it("should have a username in a room", (done) => {
+it("should have a username in a room", async () => {
   myRouter(["/1/oriane"]);
-  screen.findByText(/oriane/i).then(() => done());
+  await screen.findByText(/oriane/i);
 });
 
 it("should display 404", () => {
@@ -39,119 +39,128 @@ it("should display 404", () => {
   expect(screen.getByText(/404/i)).toBeInTheDocument();
 });
 
-it("should show: Username Taken for duplicate usernames", (done) => {
+it("should show: Username Taken for duplicate usernames", async () => {
   const socket2 = io("ws://localhost:3000");
-  socket2.emit(
-    "room:create",
-    { room: "3", username: "ori" },
-    async (response) => {
-      expect(response).toBe(true);
-      myRouter(["/3/ori"]);
-      await screen.findByText(/This username is already taken/i);
-      socket2.close();
-      done();
-    }
-  );
+  await new Promise((resolve) => {
+    socket2.emit(
+      "room:create",
+      { room: "3", username: "ori" },
+      async (response) => {
+        expect(response).toBe(true);
+        myRouter(["/3/ori"]);
+        await screen.findByText(/This username is already taken/i);
+        socket2.close();
+        resolve();
+      }
+    );
+  });
 });
 
-it("should display spectrums", (done) => {
+it("should display spectrums", async () => {
   const socket2 = io("ws://localhost:3000");
   const socket3 = io("ws://localhost:3000");
 
-  let doneNb = 0;
-  const checkDone = () => {
-    if (doneNb === 2) done();
-    else doneNb++;
-  };
-
   myRouter(["/4/oriane"]);
-  screen.findByText(/START/i).then(() => {
-    socket2.emit(
-      "room:join",
-      { room: "4", username: "Wael" },
-      async (response) => {
-        expect(response.joined).toBe(true);
-        await screen.findByText(/Wael/i);
-        socket2.close();
-        checkDone();
-      }
-    );
-    socket3.emit(
-      "room:join",
-      { room: "4", username: "Tetris" },
-      async (response) => {
-        expect(response.joined).toBe(true);
-        await screen.findByText(/Tetris/i);
-        socket3.close();
-        checkDone();
-      }
-    );
-    screen.findByText(/oriane/i).then(checkDone);
+  await screen.findByText(/START/i);
+
+  await act(async () => {
+    await new Promise((resolve) => {
+      socket2.emit(
+        "room:join",
+        { room: "4", username: "Wael" },
+        async (response) => {
+          expect(response.joined).toBe(true);
+          resolve();
+        }
+      );
+    });
+
+    await new Promise((resolve) => {
+      socket3.emit(
+        "room:join",
+        { room: "4", username: "Tetris" },
+        async (response) => {
+          expect(response.joined).toBe(true);
+          resolve();
+        }
+      );
+    });
   });
+
+  await screen.findByText(/Wael/i);
+  await screen.findByText(/Tetris/i);
+
+  socket2.close();
+  socket3.close();
 });
 
-it("should be the master", (done) => {
+it("should be the master", async () => {
   const socket2 = io("ws://localhost:3000");
 
   myRouter(["/5/Wael"]);
-  screen.findByText(/START/i).then(() => {
-    socket2.emit("room:join", { room: "5", username: "Oriane" }, (response) => {
-      expect(response.joined).toBe(true);
-      const masterDiv = screen.getByTestId("master-div");
-      const img = within(masterDiv).getByRole("img", {
-        name: /a crown to show who is the master of the game/i,
-      });
-      expect(img).toBeInTheDocument();
-      socket2.close();
-      done();
+  await screen.findByText(/START/i);
+
+  await act(async () => {
+    await new Promise((resolve) => {
+      socket2.emit(
+        "room:join",
+        { room: "5", username: "Oriane" },
+        (response) => {
+          expect(response.joined).toBe(true);
+          const masterDiv = screen.getByTestId("master-div");
+          const img = within(masterDiv).getByRole("img", {
+            name: /a crown to show who is the master of the game/i,
+          });
+          expect(img).toBeInTheDocument();
+          socket2.close();
+          resolve();
+        }
+      );
     });
   });
 });
 
-it("should display 500", (done) => {
+it("should display 500", async () => {
   myRouter(["/"]);
-  socket.on("error", async () => {
-    await screen.findByText(/500/i);
-    done();
-  });
   socket.emit("room:create", { room: "6" });
+  await screen.findByText(/500/i);
 });
 
-it("should display game board", (done) => {
+it("should display game board", async () => {
   const socket2 = io("ws://localhost:3000");
-  let doneNb = 0;
-
-  const checkDone = () => {
-    if (doneNb === 2) done();
-    else doneNb++;
-  };
-
   myRouter(["/7/oriane"]);
-  screen.findByText(/START/i).then(() => {
-    socket2.emit(
-      "room:join",
-      { room: "7", username: "Wael" },
-      async (response) => {
-        expect(response.joined).toBe(true);
-        await screen.findByText(/Wael/i);
-        checkDone();
-      }
-    );
-    screen.findByText(/Wael/i).then(() => {
+  await screen.findByText(/START/i);
+
+  await act(async () => {
+    await new Promise((resolve) => {
+      socket2.emit(
+        "room:join",
+        { room: "7", username: "Wael" },
+        async (response) => {
+          expect(response.joined).toBe(true);
+          resolve();
+        }
+      );
+    });
+
+    await new Promise((resolve) => {
       socket.emit("game:launch", async (response) => {
         expect(response).toBe(true);
-        socket2.emit("game:move", { move: "hard drop" }, () => {
-          socket2.close();
-          checkDone();
-        });
-        let movesCompleted = 0;
-        const onMoveComplete = () => {
-          movesCompleted++;
-          if (movesCompleted === 10) checkDone();
-        };
-        for (let i = 0; i < 10; i++)
-          socket.emit("game:move", { move: "hard drop" }, onMoveComplete);
+        resolve();
       });
     });
+
+    await new Promise((resolve) => {
+      socket2.emit("game:move", { move: "hard drop" });
+      let movesCompleted = 0;
+      const onMoveComplete = () => {
+        movesCompleted++;
+        if (movesCompleted === 10) resolve();
+      };
+      for (let i = 0; i < 10; i++)
+        socket.emit("game:move", { move: "hard drop" }, onMoveComplete);
+    });
   });
+  await screen.findByText(/Wael/i);
+  socket2.close();
 });

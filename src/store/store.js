@@ -127,14 +127,6 @@ const createSocketMiddleware = () => {
       }
 
       if (socket.connected && !store.getState().game.connected) connect();
-      // socket.off
-      // socket.off("connect", connect);
-      // socket.off("game:update", onUpdateGame);
-      // socket.off("game:spectrums", onSpectrums);
-      // socket.off("game:end", onEndGame);
-      // socket.off("room:master", onMaster);
-      // socket.off("room:players", onPlayers);
-      // socket.off("error", onError);
       socket.on("connect", connect);
       socket.on("game:update", onUpdateGame);
       socket.on("game:spectrums", onSpectrums);

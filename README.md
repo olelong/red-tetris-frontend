@@ -65,6 +65,7 @@ To run this frontend, you also need the [backend repository](https://github.com/
 3. Start the frontend server:
    ```bash
    npm run start
+   Y // Would you like to run the app on another port instead? › (Y/n)
    ```
 
 The frontend will be accessible at:

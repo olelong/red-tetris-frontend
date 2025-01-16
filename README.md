@@ -7,17 +7,14 @@ A project with [Whazami](https://github.com/whazami)
 This repository contains the **frontend** of the Tetris Multiplayer project. The application allows users to play Tetris solo or with friends in multiplayer mode. Themes change randomly to enhance the gaming experience.
 
 ---
+<h2>
+   <img src="src/assets/catsTheme/blue-cat.png" width="30px" />
+  Features
+</h2>
 
-## Features
 - **Single Player Mode**: Accessible directly via the browser.
 - **Multiplayer Mode**: Create and join rooms with custom unique usernames.
 - **Dynamic Themes**: The Tetris game changes its appearance randomly.
-<div>
-   <img src="src/assets/catsTheme/blue-cat.png" width="30px" />
-   <img src="src/assets/fairiesTheme/fairyRed.png" width="30px" />
-   <img src="src/assets/fruitsTheme/orange.png" width="30px" /> 
-</div>
-
 - **Real-Time Communication**: Powered by sockets for seamless interactions.
 - **Bonus for Tetris Players**: Includes support for all advanced moves, including T-Spins, O-Spins, and other spin techniques, adding depth and strategy to the gameplay.
 - **Special Spin Penalties**: When a player performs a spin in multiplayer mode, a special penalty is applied to other players, temporarily increasing the gravity and making their pieces fall faster.
@@ -27,13 +24,18 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
 - **Joining Ongoing Games**: If a player joins a game already in progress, they will need to refresh the page after the game ends to rejoin the room.
 
 ---
+<h2>
+   <img src="src/assets/fairiesTheme/fairyRed.png" width="30px" />
+  Prerequisites
+</h2>
 
-## Prerequisites
 To run this frontend, you also need the [backend repository](https://github.com/olelong/red-tetris-backend). Make sure to clone and set it up before proceeding.
 
 ---
-
-## Setup Instructions
+<h2>
+   <img src="src/assets/fruitsTheme/orange.png" width="30px" /> 
+  Setup Instructions
+</h2>
 
 ### Step 1: Clone and Set Up the Backend
 1. Clone the backend repository:
@@ -70,8 +72,10 @@ The frontend will be accessible at:
 - **http://localhost:3000** (if served statically by the backend).
 
 ---
-
-## How to Play
+<h2>
+   <img src="src/assets/catsTheme/purple-cat.png" width="30px" />
+  How to Play
+</h2>
 
 ### Single Player Mode
 - Open the following URL:
@@ -91,8 +95,10 @@ The frontend will be accessible at:
   Replace `{roomName}` with the name of the room and `{userName}` with your desired username.
 
 ---
-
-## Available Commands
+<h2>
+   <img src="src/assets/fairiesTheme/fairyCyan.png" width="30px" />
+ Available Commands
+</h2>
 
 ### Development Commands
 - **Install dependencies**:
@@ -121,6 +127,10 @@ The frontend will be accessible at:
   ```
 
 ---
+<h2>
+   <img src="src/assets/fruitsTheme/myrtille.png" width="30px" />
+ Technologies Used
+</h2>
 
 ## Technologies Used
 - **Frontend**: ReactJS, Redux

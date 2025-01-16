@@ -1,5 +1,5 @@
 # Tetris Multiplayer Frontend
-A project with [**Whazami**]([https://github.com/whazami])
+A project with [Whazami](https://github.com/whazami)
 
 This repository contains the **frontend** of the Tetris Multiplayer project. The application allows users to play Tetris solo or with friends in multiplayer mode. Themes change randomly to enhance the gaming experience.
 
@@ -18,7 +18,7 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
 ---
 
 ## Prerequisites
-To run this frontend, you also need the [**backend repository**]([https://github.com/olelong/red-tetris-backend]). Make sure to clone and set it up before proceeding.
+To run this frontend, you also need the [backend repository](https://github.com/olelong/red-tetris-backend). Make sure to clone and set it up before proceeding.
 
 ---
 

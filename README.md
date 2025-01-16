@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# Tetris Multiplayer Frontend
+A project with [**Whazami**]([https://github.com/whazami])
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the **frontend** of the Tetris Multiplayer project. The application allows users to play Tetris solo or with friends in multiplayer mode. Themes change randomly to enhance the gaming experience.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
+- **Single Player Mode**: Accessible directly via the browser.
+- **Multiplayer Mode**: Create and join rooms with custom unique usernames.
+- **Dynamic Themes**: The Tetris game changes its appearance randomly.
+- **Real-Time Communication**: Powered by sockets for seamless interactions.
+- **Bonus for Tetris Players**: Includes support for all advanced moves, including T-Spins, O-Spins, and other spin techniques, adding depth and strategy to the gameplay.
+- **Special Spin Penalties**: When a player performs a spin in multiplayer mode, a special penalty is applied to other players, temporarily increasing the gravity and making their pieces fall faster.
+- **Line Clear Penalties**: In multiplayer mode, clearing more than one line at a time sends penalties to other players. The number of lines sent is equal to the number cleared minus one, and these penalty lines are indestructible.
+- **Spectator View**: Players can view the "ghost pieces" or specters of other players' boards in multiplayer mode.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Prerequisites
+To run this frontend, you also need the [**backend repository**]([https://github.com/olelong/red-tetris-backend]). Make sure to clone and set it up before proceeding.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Setup Instructions
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Step 1: Clone and Set Up the Backend
+1. Clone the backend repository:
+   ```bash
+   git clone git@github.com:olelong/red-tetris-backend.git
+   cd red-tetris-backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the backend server:
+   ```bash
+   npm run start
+   ```
 
-### `npm run build`
+### Step 2: Clone and Set Up the Frontend
+1. Clone this repository:
+    ```bash
+   git clone git@github.com:olelong/red-tetris-frontend.git
+   cd red-tetris-frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the frontend server:
+   ```bash
+   npm run start
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The frontend will be accessible at:
+- **http://localhost:3001** (when run standalone)
+- **http://localhost:3000** (if served statically by the backend).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## How to Play
 
-### `npm run eject`
+### Single Player Mode
+- Open the following URL:
+  ```
+  http://localhost:3000
+  ```
+  Or:
+  ```
+  http://localhost:3001
+  ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Multiplayer Mode
+- Use the following format to join a room:
+  ```
+  http://localhost:3000/{roomName}/{userName}
+  ```
+  Replace `{roomName}` with the name of the room and `{userName}` with your desired username.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Available Commands
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Development Commands
+- **Install dependencies**:
+  ```bash
+  npm install
+  ```
+- **Start the development server**:
+  ```bash
+  npm run start
+  ```
 
-## Learn More
+### Build Commands
+- **Build for production**:
+  ```bash
+  npm run build
+  ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Testing Commands
+- **Run tests**:
+  ```bash
+  npm run test
+  ```
+- **View test coverage**:
+  ```bash
+  npm run coverage
+  ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Technologies Used
+- **Frontend**: ReactJS, Redux
+- **Backend Communication**: Sockets (no database or API involved).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+Enjoy the game!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

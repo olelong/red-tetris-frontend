@@ -126,7 +126,6 @@ The frontend will be accessible at:
   ```bash
   npm run coverage
   ```
-
 ---
 <h2>
    <img src="src/assets/fruitsTheme/myrtille.png" width="30px" />

@@ -17,8 +17,18 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
 - **Dynamic Themes**: The Tetris game changes its appearance randomly.
 - **Real-Time Communication**: Powered by sockets for seamless interactions.
 - **Bonus for Tetris Players**: Includes support for all advanced moves, including T-Spins, O-Spins, and other spin techniques, adding depth and strategy to the gameplay.
+<div align="center">
+  <video src="[screenshots/TspinAndPenalty.mp4](https://github.com/olelong/red-tetris-frontend/blob/main/screenshots/TspinAndPenalty.mp4)">
+    Your browser does not support videos 
+  </video>
+</div>
+  
 - **Special Spin Penalties**: When a player performs a spin in multiplayer mode, a special penalty is applied to other players, temporarily increasing the gravity and making their pieces fall faster.
 - **Line Clear Penalties**: In multiplayer mode, clearing more than one line at a time sends penalties to other players. The number of lines sent is equal to the number cleared minus one, and these penalty lines are indestructible.
+<div align="center">
+ <img src="screenshots/CatThemeWithPenalty.png" width="500px" />
+</div>
+  
 - **Spectator View**: Players can view the "ghost pieces" or specters of other players' boards in multiplayer mode.
 - **Room Master System**: The first player to connect to a room becomes the master and is the only one who can start the game. If the master leaves the room, another player is automatically assigned as the new master.
 - **Joining Ongoing Games**: If a player joins a game already in progress, they will need to refresh the page after the game ends to rejoin the room.

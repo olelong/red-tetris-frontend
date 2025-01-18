@@ -18,7 +18,7 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
  <img src="screenshots/fruitTheme.png" width="500px" />
 </div>
   
-- **Spectator View**: Players can view the "ghost pieces" or specters of other players' boards in multiplayer mode.
+- **Spectator View**: Players can view the "ghost pieces" or spectrums of other players' boards in multiplayer mode.
 - **Line Clear Penalties**: In multiplayer mode, clearing more than one line at a time sends penalties to other players. The number of lines sent is equal to the number cleared minus one, and these penalty lines are indestructible.
 <div align="center">
  <img src="screenshots/CatThemeWithPenalty.png" width="500px" />
@@ -28,7 +28,7 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
 - **Joining Ongoing Games**: If a player joins a game already in progress, they will need to refresh the page after the game ends to rejoin the room.
 - **Dynamic Themes**: The Tetris game changes its appearance randomly.
 - **Real-Time Communication**: Powered by sockets for seamless interactions.
-- **Bonus for Tetris Players**: Includes support for all advanced moves, including T-Spins, O-Spins, and other spin techniques, adding depth and strategy to the gameplay.
+- **Bonus for Tetris Players**: Includes support for all advanced moves, including T-Spins, L-Spins, and other spin techniques, adding depth and strategy to the gameplay.
 - **Special Spin Penalties**: When a player performs a spin in multiplayer mode, a special penalty is applied to other players, temporarily increasing the gravity and making their pieces fall faster.
 
 <div align="center">

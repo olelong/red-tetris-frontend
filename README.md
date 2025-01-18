@@ -182,6 +182,12 @@ https://github.com/user-attachments/assets/4350f5ce-7ecf-4d78-91ce-53e50f484b73
   <img src="screenshots/nest.png" width="200px" />
 </div>
 ---
+<h2>
+  <img src="src/assets/catsTheme/penalty-cat.png" width="30px" />
+  License
+</h2>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 Enjoy the game!
-

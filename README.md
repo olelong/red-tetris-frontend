@@ -23,6 +23,7 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
 <div align="center">
  <img src="screenshots/CatThemeWithPenalty.png" width="500px" />
 </div>
+
 - **Room Master System**: The first player to connect to a room becomes the master and is the only one who can start the game. If the master leaves the room, another player is automatically assigned as the new master.
 - **Joining Ongoing Games**: If a player joins a game already in progress, they will need to refresh the page after the game ends to rejoin the room.
 - **Dynamic Themes**: The Tetris game changes its appearance randomly.

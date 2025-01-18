@@ -29,6 +29,7 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
 - **Dynamic Themes**: The Tetris game changes its appearance randomly.
 - **Real-Time Communication**: Powered by sockets for seamless interactions.
 - **Bonus for Tetris Players**: Includes support for all advanced moves, including T-Spins, O-Spins, and other spin techniques, adding depth and strategy to the gameplay.
+- **Special Spin Penalties**: When a player performs a spin in multiplayer mode, a special penalty is applied to other players, temporarily increasing the gravity and making their pieces fall faster.
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/59d0837b-480f-42d5-874b-bac95c14e7ed" >
@@ -36,7 +37,7 @@ This repository contains the **frontend** of the Tetris Multiplayer project. The
   </video>
 </div>
 
-- **Special Spin Penalties**: When a player performs a spin in multiplayer mode, a special penalty is applied to other players, temporarily increasing the gravity and making their pieces fall faster.
+
 
 ---
 <h2>

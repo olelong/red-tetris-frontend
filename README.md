@@ -171,13 +171,13 @@ https://github.com/user-attachments/assets/4350f5ce-7ecf-4d78-91ce-53e50f484b73
 
 ## Technologies Used
 - **Frontend**:
-<div align="center">
+<div align="left">
   <img src="screenshots/react.png" width="200px" />
   <img src="screenshots/redux.png" width="200px" />
 </div>
   
 - **Backend**: (no database or API involved)
-<div align="center">
+<div align="left">
   <img src="screenshots/socketio.png" width="200px" />
   <img src="screenshots/nest.png" width="200px" />
 </div>
